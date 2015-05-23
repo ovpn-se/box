@@ -1,0 +1,10 @@
+{
+    "require": {
+        "slim/slim": ">=2.3",
+        "monolog/monolog": "dev-master",
+        "flynsarmy/slim-monolog": "dev-master",
+        "mashape/unirest-php": "dev-master",
+        "dittertp/gibberish-aes-php": "dev-master",
+        "datasift/ifconfig-parser": "dev-master"
+    }
+}

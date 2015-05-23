@@ -1,0 +1,87 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: davidwibergh
+ * Date: 15-04-16
+ * Time: 11:07
+ */
+
+namespace API;
+
+
+use Base\String;
+use Slim\Slim;
+
+class User {
+
+    /**
+     * Verify user credentials through OVPNs API
+     */
+    public function authenticate()
+    {
+
+        $app = Slim::getInstance();
+
+        // Fetch variables
+        $username  = $app->request->post('username');
+        $password  = $app->request->post('password');
+
+        // Verify that required variables exist
+        if(is_null($username) || is_null($password)) {
+            \Base\Log::message(_('Nödvändiga parametrar skickades inte med i API-anropet (username, password)'));
+            $app->halt(400, json_encode(array('status' => false, 'error' => _('Nödvändiga parametrar saknas.'))));
+        }
+
+        // Execute request to OVPNs API
+        $response = \Unirest\Request::post(
+            "https://www.ovpn.se/v1/api/client",
+            null,
+            array(
+                'username' => $username,
+                'password' => $password
+            )
+        );
+
+        // Handle response from API request
+        if($response->code != 200) {
+
+            // API request failed for some reason
+            \Base\Log::message($response->body->error);
+            $app->halt($response->code, json_encode(array('status' => false, 'error' => $response->body->error)));
+        }
+
+        // The API request succeeded.
+        $file    = new \Shell\File();
+        $content = $file->read('config.json');
+        $config  = json_decode($content);
+
+        if(!$content || !$config) {
+            \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
+            $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
+        }
+
+        // Update credentials
+        $config->credentials = array(
+            'username' => $username,
+            'password' => $password
+        );
+
+        // Update session
+        $config->session               = $response->body;
+
+        // Save credentials and session data in the config file
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+
+        // Verify that the file write was successful
+        if(!$write) {
+            \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
+            $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
+        }
+
+        // Return success
+        $app->response->status(200);
+        $app->response->body(json_encode(array('status' => true)));
+        $app->stop();
+
+    }
+} 

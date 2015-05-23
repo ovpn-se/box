@@ -1,0 +1,43 @@
+.no-hover {
+    cursor: default;
+}
+
+.no-hover:hover {
+    color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
+
+.connection-details {
+    padding-top: 10px;
+}
+
+.text {
+    margin-top: 15px;
+    color: #7D8186;
+    font-size: 15px;
+    line-height: 22px;
+    margin-bottom: 10px;
+}
+
+h3 {
+    margin-top: 10px;
+}
+
+.navbar .nav li {
+    width: 100px; /* or whatever width you want for items */
+    display: inline-block;
+    float: none;
+}
+.navbar .nav {
+    float: none;
+    text-align: center;
+}
+
+#signup .wrapper .formy {
+    margin-top:0;
+}
+
+.table-width-325 tbody tr th,td {
+    width: 325px;
+}

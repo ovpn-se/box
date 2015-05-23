@@ -1,0 +1,17 @@
+{
+    "credentials": {
+        "username": "",
+        "password": ""
+    },
+    "interfaces": {
+        "wan": "",
+        "lan": "",
+        "openvpn": ""
+    },
+    "files": {
+        "auth": "\/var\/etc\/openvpn\/client1.conf",
+        "dhcp": "\/var\/dhcpd\/var\/db\/dhcpd.leases",
+        "pfsense": "\/cf\/conf\/config.xml"
+    },
+    "darkstat": "http:\/\/10.220.0.1:666\/"
+}
