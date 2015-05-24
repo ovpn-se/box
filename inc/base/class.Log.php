@@ -27,7 +27,7 @@ class Log {
 
         $file    = new \Shell\File();
         $content = $file->read('log.json');
-        $log     = json_decode($content);
+        $log     = json_decode($content, true);
 
         $log[] = array(
             'timestamp' => $date->getTimestamp(),
