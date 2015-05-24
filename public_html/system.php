@@ -72,7 +72,7 @@ require('./assets/template/top.php');
         </tr>
         <tr>
             <th scope="row">Tid kvar</th>
-            <td><?php echo \Base\String::print_time(false, $session->timeleft); ?></td>
+            <td><?php echo \Base\String::print_time(false, $session->timestamp); ?></td>
         </tr>
         <tr>
             <th scope="row">Tilläggstjänster</th>
@@ -111,7 +111,7 @@ require('./assets/template/top.php');
             <td><?php echo \Base\String::outputCleanString(php_uname("r")); ?></td>
         </tr>
         <tr>
-            <th scope="row">Version</th>
+            <th scope="row">Box</th>
             <td><?php if(!$version) { echo '-'; } else { echo \Base\String::outputCleanString($version->commit->short); } ?></td>
         </tr>
         <tr>
