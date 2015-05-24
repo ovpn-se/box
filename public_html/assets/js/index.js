@@ -144,25 +144,25 @@ $(function () {
 
         // Hämta värdet i selectmenyn
         var ip = $("#serverIp").val();
-        console.log('valid ip: ' +ip);
+        //console.log('valid ip: ' +ip);
 
         // Verifiera resultatet
         if(ip != 0) {
 
             // En specifik server har valts.
-            console.log('Anslut till: ' + ip);
+            //console.log('Anslut till: ' + ip);
 
         } else {
 
-            console.log('automatisk');
+            //console.log('automatisk');
             // Vi ska välja den bästa servern för personen.
             var serverData = getBestServer();
-            console.log(serverData);
+            //console.log(serverData);
             ip  = serverData.server.ip;
 
         }
 
-        console.log('ip: ' + ip);
+        //console.log('ip: ' + ip);
         connect(ip);
 
         return false;
@@ -185,7 +185,6 @@ $(function () {
 
     // Form that gets executed when user tries to update the box
     $("body").on('click', '#update_box', function() {
-        console.log('click');
 
         $(".update").addClass('hidden');
 

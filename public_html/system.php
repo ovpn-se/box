@@ -112,7 +112,7 @@ require('./assets/template/top.php');
         </tr>
         <tr>
             <th scope="row">Version</th>
-            <td><?php if(!$version) { echo '-'; } else { echo \Base\String::outputCleanString($version['commit']['short']); } ?></td>
+            <td><?php if(!$version) { echo '-'; } else { echo \Base\String::outputCleanString($version->commit->short); } ?></td>
         </tr>
         <tr>
             <th scope="row">PHP</th>

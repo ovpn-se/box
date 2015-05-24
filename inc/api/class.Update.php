@@ -25,7 +25,7 @@ class Update {
         if(!$release) {
 
             // No update is available
-            $app->halt(304);
+            $app->halt(444);
         }
 
         // Return success
