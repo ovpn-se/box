@@ -34,7 +34,7 @@ class File {
 
             // Attempt to open the file
             if (!$handle = fopen($file, 'r')) {
-                error_log('Could not open file (' . $file . ')');
+                \Base\Log::message('Could not open file (' . $file . ')');
                 return false;
             }
 
@@ -43,7 +43,7 @@ class File {
 
             // Verify that the read was successful
             if(!$content) {
-                error_log('fread() failed for (' . $file . ')');
+                \Base\Log::message('Could not read content from file (' . $file . ')');
                 return false;
             }
 
@@ -53,7 +53,7 @@ class File {
             return $content;
 
         } else {
-            error_log('File was not readable (' . $file . ')');
+            \Base\Log::message('File was not readable (' . $file . ')');
             return false;
         }
     }
@@ -75,31 +75,40 @@ class File {
             $data['file'] = DOCUMENT_ROOT . '/' . $data['file'];
         }
 
-        //error_log($data['file']);
+        // Make the filesystem writeable
+        shell_exec('mount -o rw /');
 
         // Let's make sure the file exists and is writable first.
         if (is_writable($data['file'])) {
 
             // Attempt to open the file
             if (!$handle = fopen($data['file'], 'w')) {
-                //error_log('Could not open file (' . $data['file'] . ')');
+                \Base\Log::message('Could not open file (' . $data['file'] . ')');
+
+                // Make the filesystem readonly
+                shell_exec('mount -o ro /');
                 return false;
             }
 
             // Write the content to our opened file.
             if (fwrite($handle, $data['content']) === FALSE) {
-                //error_log('fwrite() failed for (' . $data['file'] . ')');
-                //error_log('Failed content: ' . $data['content']);
+                \Base\Log::message('Could not write to file (' . $data['file'] . ')');
+                \Base\Log::message('Content that failed to be written: ' . $data['content']);
             }
 
+            // Unset the file 'cache'
             unset($_SESSION['file'][$data['file']]);
 
+            // Close the file
             fclose($handle);
 
+            // Make the filesystem readonly
+            shell_exec('mount -o ro /');
             return true;
 
         } else {
             error_log('File was not writeable (' . $data['file'] . ')');
+            shell_exec('mount -o ro /');
             return false;
         }
     }
