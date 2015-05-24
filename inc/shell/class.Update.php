@@ -11,6 +11,11 @@ namespace Shell;
 
 class Update {
 
+    /**
+     * Fetches information in regards to the latest commit on Github
+     *
+     * @return array|bool
+     */
     public function checkLatestCommit()
     {
         // Fetch datacenters
@@ -37,9 +42,11 @@ class Update {
     }
 
     /**
-     * Updates the current GUI for OVPNbox and writes the changes to config.json.
+     * Check whether or not an update is available
+     *
+     * @return array|bool
      */
-    public function execute()
+    public function checkAvailableUpdate()
     {
 
         // Fetch the latest commit
@@ -81,28 +88,53 @@ class Update {
 
         }
 
-        // Execute update script
-        // @todo insert update script.
-        $success = true;
+        return $release;
+    }
 
-        if($success) {
+    /**
+     * Updates the current GUI for OVPNbox and writes the changes to config.json.
+     */
+    public function execute()
+    {
 
-            // Set server IP
-            $config->gui = $release;
+        // Check if we should update
+        $release = $this->checkLatestCommit();
 
-            // Save credentials and session data in the config file
-            $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
-
-            // Verify that the file write was successful
-            if(!$write) {
-                \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
-                return false;
-            }
-
-            return true;
+        // Verify that we retrieved the latest commit
+        if(!$release) {
+            return false;
         }
 
-        return false;
+        // Load the configuration file to check which version we have
+        $file    = new \Shell\File();
+        $content = $file->read('config.json');
+        $config = json_decode($content);
+
+        // Verify that we could read the contents
+        if(!$content || !$config) {
+            \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
+            return false;
+        }
+
+        // Execute update script
+        $update = shell_exec('/opt/ovpn/sbin/update-from-master');
+        \Base\Log::message('Update of OVPN was executed. Current version: \'' . $release . '\'', 'info');
+        \Base\Log::message('Output of update script: ' . $update, 'info');
+
+        // Set current version
+        $config->gui = $release;
+
+        // Save credentials and session data in the config file
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+
+        // Verify that the file write was successful
+        if(!$write) {
+            \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
+            return false;
+        }
+
+        return true;
+
     }
 
 } 

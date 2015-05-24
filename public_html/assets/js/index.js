@@ -183,7 +183,42 @@ $(function () {
         return true;
     });
 
+
+    setTimeout(
+        function(){
+
+            // Check for available updates.
+            checkAvailableUpdate();
+        }, 3000);
+
 });
+
+function checkAvailableUpdate()
+{
+    $.ajax({
+        type: "GET",
+        url:  "/api/update",
+        async: true,
+        timeout:60000,
+        success: function (output) {
+
+            console.log(output);
+        },
+        error: function(xhr, textStatus, errorThrown ) {
+
+            try {
+                var err = JSON.parse(xhr.responseText);
+            } catch(error) {
+                var err = [{"error": "Ett tekniskt fel har skett."}];
+            }
+
+            console.log(err);
+            return true;
+
+        }
+    });
+    return true;
+}
 
 function getServerData()
 {
