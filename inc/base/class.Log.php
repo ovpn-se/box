@@ -25,15 +25,34 @@ class Log {
 
         $date = new \DateTime('now', new \DateTimeZone('Europe/Stockholm'));
 
+        // Open the log file
         $file    = new \Shell\File();
         $content = $file->read('log.json');
-        $log     = json_decode($content, true);
 
-        if(!$content || !$log) {
-            error_log('Failed to open or decode the log file');
-            return false;
+
+        // Check if file was successfully opened
+        if(!$content) {
+
+            // File was not opened. Attempt to create the log file
+            $create = $file->create('log.json');
+
+            // Check if file was successfully created
+            if(!$create) {
+
+                // Failed to create file.
+                return false;
+            }
         }
 
+        // Decode the log file
+        $log = json_decode($content, true);
+
+        // If the json_decode didn't work lets scrap all existing data and create a new array
+        if(!$log) {
+            $log = array();
+        }
+
+        // Create log entry
         $log[] = array(
             'timestamp' => $date->getTimestamp(),
             'message'   => $string
@@ -47,6 +66,7 @@ class Log {
             )
         );
 
+        // Verify that the write was successful
         if(!$write) {
             error_log('Failed to log entry (' . $string . ')');
             return false;

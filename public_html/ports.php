@@ -68,7 +68,7 @@ require('./assets/template/top.php');
 <form class="form-inline text-center" role="form" id="port_form">
     <div class="form-group">
         <label for="port_protocol" class="control-label"></label>
-        <div class="col-sm-7">
+        <div class="col-sm-6">
             <select class="form-control" name="device" id="device">
                 <?php
                 if($static) {
@@ -88,8 +88,14 @@ require('./assets/template/top.php');
         </div>
     </div>
     <div class="form-group">
+        <label for="port_number" class="control-label"></label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="port_number" name="port_number" placeholder="Port" />
+        </div>
+    </div>
+    <div class="form-group" style="margin-top:15px;">
         <label for="port_protocol" class="control-label"></label>
-        <div class="col-sm-7">
+        <div class="col-sm-6">
             <select class="form-control" name="port_protocol" id="port_protocol">
                 <option value="TCP">TCP</option>
                 <option value="UDP">UDP</option>
@@ -98,7 +104,7 @@ require('./assets/template/top.php');
         </div>
     </div>
     <div class="form-group">
-        <div class="col-sm-7">
+        <div class="col-sm-6">
             <button type="submit" class="btn btn-primary" style="margin-top:15px;"><?php echo _('Öppna port'); ?></button>
         </div>
     </div>

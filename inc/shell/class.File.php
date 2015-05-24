@@ -112,4 +112,47 @@ class File {
             return false;
         }
     }
+
+    /**
+     * Creates a file
+     *
+     * @param $filename
+     * @return bool
+     */
+    public function create($filename)
+    {
+
+        // Check if the file name is the full path or not
+        if(strpos($filename, '/') === false) {
+            $filename = DOCUMENT_ROOT . '/' . $filename;
+        }
+
+        // Check if the file already exists
+        if(file_exists($filename)) {
+
+            // The file already exists.
+            \Base\Log::message('File already exists (' . $filename . ')');
+            return false;
+        }
+
+        // Make the filesystem writeable
+        shell_exec('mount -o rw /');
+
+        // Create file
+        $fp = fopen($filename,"w");
+        fclose($fp);
+
+        // Make the filesystem read-only
+        shell_exec('mount -o ro /');
+
+        // Verify that the file was successfully created
+        if(!file_exists($filename)) {
+
+            // Log the error
+            \Base\Log::message('Failed to create file (' . $filename . ')');
+            return false;
+        }
+
+        return true;
+    }
 } 
