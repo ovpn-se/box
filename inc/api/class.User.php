@@ -67,7 +67,7 @@ class User {
         );
 
         // Update session
-        $config->session               = $response->body;
+        $config->session = $response->body;
 
         // Save credentials and session data in the config file
         $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
@@ -75,6 +75,21 @@ class User {
         // Verify that the file write was successful
         if(!$write) {
             \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
+            $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
+        }
+
+        $credentials = <<<EOT
+{$username}
+{$password}
+EOT;
+
+
+        // Save OpenVPN credentials
+        $write = $file->write(array('file' => '/var/etc/openvpn/client1.up', 'content' => $credentials));
+
+        // Verify that the file write was successful
+        if(!$write) {
+            \Base\Log::message(_('Misslyckades att skriva inloggningsuppgifter till OpenVPN konfiguration.'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 

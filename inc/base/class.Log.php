@@ -29,7 +29,6 @@ class Log {
         $file    = new \Shell\File();
         $content = $file->read('log.json');
 
-
         // Check if file was successfully opened
         if(!$content) {
 
