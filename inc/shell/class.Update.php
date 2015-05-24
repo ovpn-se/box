@@ -27,14 +27,14 @@ class Update {
         }
 
         $date = new \DateTime(
-            $response->body->commit->committer->date,
+            $response->body[0]->commit->committer->date,
             new \DateTimeZone('Europe/Stockholm')
         );
 
         return array(
             'commit' => array(
-                'full' => $response->body->sha,
-                'short' => substr($response->body->sha, 0, 10),
+                'full' => $response->body[0]->sha,
+                'short' => substr($response->body[0]->sha, 0, 10),
             ),
             'date' => $date->getTimestamp()
         );
