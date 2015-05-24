@@ -21,7 +21,7 @@ class Port {
         global $config;
 
         unset($config['ovpn_forward']);
-        \write_config($config);
+        \write_config('Purged port forwards');
         return true;
     }
 
@@ -61,7 +61,7 @@ class Port {
             $portforward['port']=$port;
             $portforward['proto']=$proto;
             $config['ovpn_forward']['hosts'][]=$portforward;
-            \write_config($config);
+            \write_config('Added port forward for host');
             \filter_configure();
             return true;
         }
@@ -83,7 +83,7 @@ class Port {
                 print $v;
                 if ($v == $ip) {
                       unset($config['ovpn_forward']['hosts'][$k]);
-                      \write_config($config);
+                      \write_config('Removed port forward for host');
                       \filter_configure();
                       return true;
                 }

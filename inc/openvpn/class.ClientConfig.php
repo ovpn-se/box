@@ -20,6 +20,9 @@ class ClientConfig {
         require('/etc/inc/config.inc');
         require('/etc/inc/filter.inc');
 
+        // Make the config variable accessible
+        global $config;
+
         $config_types = array(
             'normal' => array(
                 'ports' => array(
@@ -190,7 +193,7 @@ EOT;
                 $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
             }
 
-            \write_config($config);
+            \write_config('Updated OpenVPN settings');
         }
 
         return true;

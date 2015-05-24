@@ -371,6 +371,9 @@ class IP {
         require('/etc/inc/config.inc');
         require('/etc/inc/filter.inc');
 
+        // Make the config variable accessible
+        global $config;
+
         var_dump($config['ovpn_killswitch']);
 
         if (isset($config['ovpn_killswitch']) && $config['ovpn_killswitch'] == 1) {
@@ -380,7 +383,7 @@ class IP {
 
         }
 
-        write_config($config);
+        write_config('Toggled the killswitch');
         filter_configure();
     }
 } 
