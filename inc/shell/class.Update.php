@@ -74,7 +74,7 @@ class Update {
             $update = true;
         } else {
 
-            if($config->gui->commit->full != $release->commit->full) {
+            if($config->gui->commit->full != $release['commit']['full']) {
                 $update = true;
             } else {
                 $update = false;
