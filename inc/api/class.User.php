@@ -105,7 +105,7 @@ EOT;
                 $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
             }
 
-            \write_config('Updated OpenVPN credentials');
+            \write_config('Updated OpenVPN credentials', true, true);
         }
 
 

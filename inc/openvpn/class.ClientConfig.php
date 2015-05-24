@@ -193,7 +193,7 @@ EOT;
                 $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
             }
 
-            \write_config('Updated OpenVPN settings');
+            \write_config('Updated OpenVPN settings', true, true);
         }
 
         return true;

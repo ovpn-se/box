@@ -383,7 +383,7 @@ class IP {
 
         }
 
-        write_config('Toggled the killswitch');
+        write_config('Toggled the killswitch', true, true);
         filter_configure();
     }
 } 
