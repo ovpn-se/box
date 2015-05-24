@@ -15,7 +15,6 @@
     <!-- javascript -->
     <script src="/assets/js/jquery.min.js"></script>
     <script src="/assets/js/bootstrap.min.js"></script>
-    <script src="/assets/js/theme.js"></script>
     <script src="/assets/js/functions.js"></script>
 
     <?php
@@ -74,3 +73,4 @@
                         <div class="col-sm-12">
                             <div class="error alert alert-danger hidden"></div>
                             <div class="info alert alert-info hidden"></div>
+                            <div class="update alert alert-info hidden"></div>

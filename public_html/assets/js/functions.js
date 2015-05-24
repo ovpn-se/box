@@ -81,31 +81,6 @@ function displayMessage(type, title, message) {
     element.html(display).removeClass('hidden');
 }
 
-function logout()
-{
-
-    $.ajax({
-        type: "DELETE",
-        url:  "/api/authenticate",
-        async: false,
-        cache: false,
-        timeout: 60000,
-        error: function(xhr, textStatus, errorThrown ) {
-
-            try {
-                var err = JSON.parse(xhr.responseText);
-            } catch(error) {
-                var err = [{"error": "Ett tekniskt fel har skett."}];
-            }
-
-            alert(err.error);
-
-        }
-    });
-
-    window.location = '/login/';
-}
-
 function dynamicSort(property) {
     var sortOrder = 1;
     if(property[0] === "-") {
