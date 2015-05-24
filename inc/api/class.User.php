@@ -106,6 +106,8 @@ EOT;
             }
 
             \write_config('Updated OpenVPN credentials', true, true);
+        } else {
+            \Base\Log::message('Empty openvpn');
         }
 
 
