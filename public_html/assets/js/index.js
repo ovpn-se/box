@@ -183,6 +183,17 @@ $(function () {
         return true;
     });
 
+    // Form that gets executed when user tries to update the box
+    $("body").on('click', '#update_box', function() {
+        console.log('click');
+
+        $(".update").addClass('hidden');
+
+        displayMessage('info', 'Uppdatering pågår', 'OVPNbox håller på att uppdateras.');
+        updateBox();
+        return true;
+    });
+
 
     setTimeout(
         function(){
@@ -193,6 +204,40 @@ $(function () {
 
 });
 
+function updateBox()
+{
+    $.ajax({
+        type: "POST",
+        url:  "/api/update",
+        async: true,
+        timeout:120000,
+        success: function (output) {
+
+            displayMessage('info', 'Uppdatering lyckades!', 'OVPNbox har uppdateras. Gränssnittet kommer snart att laddas om.');
+            setTimeout(
+                function(){
+                    window.location = '/';
+                },
+                4500
+            );
+
+        },
+        error: function(xhr, textStatus, errorThrown ) {
+
+            try {
+                var err = JSON.parse(xhr.responseText);
+            } catch(error) {
+                var err = [{"error": "Ett tekniskt fel har skett."}];
+            }
+
+            console.log(err);
+            return true;
+
+        }
+    });
+    return true;
+}
+
 function checkAvailableUpdate()
 {
     $.ajax({
@@ -202,7 +247,15 @@ function checkAvailableUpdate()
         timeout:60000,
         success: function (output) {
 
-            console.log(output);
+            var element = $(".update");
+            element.html('<h4>En uppdatering finns tillgänglig</h4>' +
+                'En <a href="https://github.com/ovpn-se/box/commit/' + output.commit.full + '" target="_blank" title="Visa uppdateringen">ny uppdatering <i>(' + output.commit.short + ')</i></a> av OVPNbox finns tillgänglig!<br /><br />' +
+                '<form role="form" action="#">' +
+                    '<div class="form-group">' +
+                        '<button type="button" name="submit" id="update_box" class="btn btn-success">Uppdatera OVPNbox</button>' +
+                    '</div>' +
+                '</form>');
+            element.removeClass('hidden');
         },
         error: function(xhr, textStatus, errorThrown ) {
 

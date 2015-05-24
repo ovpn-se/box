@@ -29,18 +29,30 @@ class Log {
         $content = $file->read('log.json');
         $log     = json_decode($content, true);
 
+        if(!$content || !$log) {
+            error_log('Failed to open or decode the log file');
+            return false;
+        }
+
         $log[] = array(
             'timestamp' => $date->getTimestamp(),
             'message'   => $string
         );
 
         // Save the log file
-        $file->write(
+        $write = $file->write(
             array(
-                'file' => 'config.json',
+                'file' => 'log.json',
                 'content' => json_encode($log, JSON_PRETTY_PRINT)
             )
         );
+
+        if(!$write) {
+            error_log('Failed to log entry (' . $string . ')');
+            return false;
+        }
+
+        return true;
     }
 
 } 

@@ -70,6 +70,7 @@ class Update {
 
         // Look at the current commit to see if we should update
         if(!isset($config->gui)) {
+            \Base\Log::message(_('GUI-parametern fanns inte i config-filen', 'info'));
             $update = true;
         } else {
 
