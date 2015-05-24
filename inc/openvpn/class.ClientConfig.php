@@ -16,6 +16,10 @@ class ClientConfig {
     public function generate($ip, $type)
     {
 
+        // Include pfsense configuration files
+        require('/etc/inc/config.inc');
+        require('/etc/inc/filter.inc');
+
         $config_types = array(
             'normal' => array(
                 'ports' => array(
@@ -112,22 +116,22 @@ EOT;
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Check if file location for the client configuration is added
-        if(empty($config->files->auth)) {
+        if(empty($OVPNconfig->files->auth)) {
             return false;
         }
 
         $write = $file->write(
             array(
-                'file' => $config->files->auth,
+                'file' => $OVPNconfig->files->auth,
                 'content' => $clientconfig
             )
         );
@@ -136,6 +140,57 @@ EOT;
         if(!$write) {
             \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
             return false;
+        }
+
+        if(!empty($config['openvpn']['openvpn-client'])) {
+            foreach($config['openvpn']['openvpn-client'] as $key => $client) {
+                $config['openvpn']['openvpn-client'][$key]['protocol'] = 'UDP';
+                $config['openvpn']['openvpn-client'][$key]['dev_mode'] = 'tun';
+                $config['openvpn']['openvpn-client'][$key]['interface'] = 'wan';
+                $config['openvpn']['openvpn-client'][$key]['server_addr'] = $ip;
+                $config['openvpn']['openvpn-client'][$key]['server_port'] = $config_types[$type]['ports'][0];
+                $config['openvpn']['openvpn-client'][$key]['resolve_retry'] = 'yes';
+                $config['openvpn']['openvpn-client'][$key]['proxy_authtype'] = 'none';
+                $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN';
+                $config['openvpn']['openvpn-client'][$key]['mode'] = 'p2p_tls';
+                $config['openvpn']['openvpn-client'][$key]['custom_options'] = <<<EOT
+remote-cert-tls server;
+reneg-sec 432000;
+persist-key;
+persist-tun;
+key-direction 1;
+mute-replay-warnings;
+replay-window 256;
+&lt;tls-auth&gt;
+-----BEGIN OpenVPN Static key V1-----
+81782767e4d59c4464cc5d1896f1cf60
+15017d53ac62e2e3b94b889e00b2c69d
+dc01944fe1c6d895b4d80540502eb719
+10b8d785c9efa9e3182343532adffe1c
+fbb7bb6eae39c502da2748edf0fb89b8
+a20b0a1085cc1f06135037881bc0c4ad
+8f2c0f4f72d2ab466fb54af3d8264c5f
+ddeb0f21aa0ca41863678f5fc4c44de4
+ca0926b36dfddc42c6f2fabd1694bdc8
+215b2d223b9c21dc6734c2c778093187
+afb8c33403b228b9af68b540c284f6d1
+83bcc88bd41d47bd717996e499ce1cbb
+fa768a9723c19c58314c4d19cfed82e5
+43ee92e73d38ad26d4fbec231c0f9f3b
+30773a5c87792e9bc7c34e8d7611002e
+bedd044e48a0f1f96527bfdcc940aa09
+-----END OpenVPN Static key V1-----
+&lt;/tls-auth&gt;
+EOT;
+
+                $config['openvpn']['openvpn-client'][$key]['crypto'] = 'AES-256-CBC';
+                $config['openvpn']['openvpn-client'][$key]['digest'] = 'SHA1';
+                $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
+                $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
+                $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
+            }
+
+            \write_config($config);
         }
 
         return true;

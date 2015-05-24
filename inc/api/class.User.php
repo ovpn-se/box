@@ -20,6 +20,10 @@ class User {
     public function authenticate()
     {
 
+        // Include pfsense configuration files
+        require('/etc/inc/config.inc');
+        require('/etc/inc/filter.inc');
+
         $app = Slim::getInstance();
 
         // Fetch variables
@@ -53,24 +57,24 @@ class User {
         // The API request succeeded.
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         // Update credentials
-        $config->credentials = array(
+        $OVPNconfig->credentials = array(
             'username' => $username,
             'password' => $password
         );
 
         // Update session
-        $config->session = $response->body;
+        $OVPNconfig->session = $response->body;
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {
@@ -83,7 +87,6 @@ class User {
 {$password}
 EOT;
 
-
         // Save OpenVPN credentials
         $write = $file->write(array('file' => '/var/etc/openvpn/client1.up', 'content' => $credentials));
 
@@ -92,6 +95,16 @@ EOT;
             \Base\Log::message(_('Misslyckades att skriva inloggningsuppgifter till OpenVPN konfiguration.'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
+
+        if(!empty($config['openvpn']['openvpn-client'])) {
+            foreach($config['openvpn']['openvpn-client'] as $key => $client) {
+                $config['openvpn']['openvpn-client'][$key]['auth_user'] = $username;
+                $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
+            }
+
+            \write_config($config);
+        }
+
 
         // Return success
         $app->response->status(200);
