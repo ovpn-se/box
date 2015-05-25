@@ -62,3 +62,22 @@ function my_autoloader($class) {
 }
 
 spl_autoload_register('my_autoloader');
+
+function saveOpenVPNCredentials($username, $password)
+{
+    require('/etc/inc/config.inc');
+
+
+    if(!empty($config['openvpn']['openvpn-client'])) {
+        foreach($config['openvpn']['openvpn-client'] as $key => $client) {
+            $config['openvpn']['openvpn-client'][$key]['auth_user'] = $username;
+            $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
+        }
+
+        \Base\Log::message('Updated configuration file.');
+        \write_config('Updated OpenVPN credentials', true, true);
+    } else {
+        \Base\Log::message('Empty openvpn');
+    }
+}
+

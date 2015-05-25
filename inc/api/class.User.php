@@ -86,7 +86,7 @@ EOT;
         // Save OpenVPN credentials
         $write = $file->write(array('file' => '/var/etc/openvpn/client1.up', 'content' => $credentials));
 
-        // Verify that the file write was successful
+        /*// Verify that the file write was successful
         if(!$write) {
             \Base\Log::message(_('Misslyckades att skriva inloggningsuppgifter till OpenVPN konfiguration.'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
@@ -108,7 +108,8 @@ EOT;
 
         $xml->asXML($OVPNconfig->files->pfsense);
         shell_exec('rm /tmp/config.cache');
-        shell_exec('/etc/rc.reload_all');
+        shell_exec('/etc/rc.reload_all');*/
+        \saveOpenVPNCredentials($username, $password);
 
         // Return success
         $app->response->status(200);
