@@ -29,8 +29,12 @@ class Log {
         $file    = new \Shell\File();
         $content = $file->read('log.json');
 
+        \Shell\System::setReadWrite();
+
         // Check if file was successfully opened
         if(!$content) {
+
+            error_log('Could not read log file. Creating file instead.');
 
             // File was not opened. Attempt to create the log file
             $create = $file->create('log.json');
@@ -39,7 +43,7 @@ class Log {
             if(!$create) {
 
                 // Failed to create file.
-                \Shell\System::setReadWrite();
+
                 error_log('Failed to create file');
                 \Shell\System::setReadOnly();
                 return false;
@@ -75,7 +79,7 @@ class Log {
             \Shell\System::setReadOnly();
             return false;
         }
-
+        \Shell\System::setReadOnly();
         return true;
     }
 
