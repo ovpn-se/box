@@ -119,6 +119,7 @@ class Update {
 
         // Execute update script
         $update = shell_exec('/opt/ovpn/sbin/update-from-master');
+        $this->postUpdate();
         \Base\Log::message('Update of OVPN was executed. Current version: \'' . $release . '\'', 'info');
         \Base\Log::message('Output of update script: ' . $update, 'info');
 
@@ -135,6 +136,20 @@ class Update {
         }
 
         return true;
+
+    }
+
+    public function updatePfsenseConfig($config)
+    {
+
+    }
+
+    /**
+     * Placerholder function that runs certain commands when necessary after an update
+     *
+     */
+    public function postUpdate()
+    {
 
     }
 
