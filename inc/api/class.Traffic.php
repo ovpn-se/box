@@ -22,15 +22,15 @@ class Traffic {
         // Get the url to darkstat
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('status' => false, 'error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         $response =  \Unirest\Request::get(
-            $config->darkstat . 'graphs.xml',
+            $OVPNconfig->darkstat . 'graphs.xml',
             array(
                 "Accept" => "text/xml"
             )
@@ -78,15 +78,15 @@ class Traffic {
         // Get the url to darkstat
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('status' => false, 'error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         $response =  \Unirest\Request::get(
-            $config->darkstat . 'graphs.xml',
+            $OVPNconfig->darkstat . 'graphs.xml',
             array(
                 "Accept" => "text/xml"
             )

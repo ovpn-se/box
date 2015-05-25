@@ -16,6 +16,15 @@ session_start();
  */
 define('DOCUMENT_ROOT', dirname(__FILE__));
 
+// Import pfsense
+include ('/etc/inc/config.inc');
+include ('/etc/inc/interfaces.inc');
+include ('/etc/inc/shaper.inc');
+include ('/etc/inc/filter.inc');
+include ('/etc/inc/ovpn.inc');
+include ('/etc/inc/globals.inc');
+include ('/etc/inc/functions.inc');
+
 // Import Composer
 require_once('vendor/autoload.php');
 
@@ -63,10 +72,16 @@ function my_autoloader($class) {
 
 spl_autoload_register('my_autoloader');
 
+/**
+ * Pfsense function to save credentials to config.xml
+ *
+ * @param $username
+ * @param $password
+ * @return bool
+ */
 function saveOpenVPNCredentials($username, $password)
 {
-    require('/etc/inc/config.inc');
-    global $config;
+    global $g, $config;
 
     if(!empty($config['openvpn']['openvpn-client'])) {
         foreach($config['openvpn']['openvpn-client'] as $key => $client) {
@@ -74,10 +89,36 @@ function saveOpenVPNCredentials($username, $password)
             $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
         }
 
-        \Base\Log::message('Updated configuration file.');
-        \write_config('Updated OpenVPN credentials', true, true);
-    } else {
-        \Base\Log::message('Empty openvpn');
+        \write_config('Updated OpenVPN credentials', false, true);
+    }
+
+    return true;
+}
+
+function saveOpenVPNConfig($ip, $port)
+{
+    global $g, $config;
+
+    if(!empty($config['openvpn']['openvpn-client'])) {
+        foreach($config['openvpn']['openvpn-client'] as $key => $client) {
+            $config['openvpn']['openvpn-client'][$key]['protocol'] = 'UDP';
+            $config['openvpn']['openvpn-client'][$key]['dev_mode'] = 'tun';
+            $config['openvpn']['openvpn-client'][$key]['interface'] = 'wan';
+            $config['openvpn']['openvpn-client'][$key]['server_addr'] = $ip;
+            $config['openvpn']['openvpn-client'][$key]['server_port'] = $port;
+            $config['openvpn']['openvpn-client'][$key]['resolve_retry'] = 'yes';
+            $config['openvpn']['openvpn-client'][$key]['proxy_authtype'] = 'none';
+            $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN';
+            $config['openvpn']['openvpn-client'][$key]['mode'] = 'p2p_tls';
+            $config['openvpn']['openvpn-client'][$key]['crypto'] = 'AES-256-CBC';
+            $config['openvpn']['openvpn-client'][$key]['digest'] = 'SHA1';
+            $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
+            $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
+            $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
+            $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log /tmp/openvpn.log;';
+        }
+
+        \write_config('Updated OpenVPN credentials', false, true);
     }
 
     return true;

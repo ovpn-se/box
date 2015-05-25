@@ -19,18 +19,18 @@ class User {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(!empty($config->credentials->username) &&
-           !empty($config->credentials->password)
+        if(!empty($OVPNconfig->credentials->username) &&
+           !empty($OVPNconfig->credentials->password)
         ) {
-            return $config->credentials;
+            return $OVPNconfig->credentials;
         } else {
             return false;
         }
@@ -46,16 +46,16 @@ class User {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(isset($config->session)) {
-            return $config->session;
+        if(isset($OVPNconfig->session)) {
+            return $OVPNconfig->session;
         } else {
             return false;
         }
@@ -72,15 +72,15 @@ class User {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(empty($config->datacenter)) {
+        if(empty($OVPNconfig->datacenter)) {
             return false;
         }
 
@@ -89,11 +89,11 @@ class User {
         $ts = $date->getTimestamp();
 
         // Check if it's been a week since the last time we checked the route
-        if(($ts-$config->datacenter->timestamp) >= 604800) {
+        if(($ts-$OVPNconfig->datacenter->timestamp) >= 604800) {
 
             // Remove the chosen datacenter & ave file
-            unset($config->datacenter);
-            $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+            unset($OVPNconfig->datacenter);
+            $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
             // Verify that the file write was successful
             if(!$write) {
@@ -104,7 +104,7 @@ class User {
             return false;
         }
 
-        return $config->datacenter->location;
+        return $OVPNconfig->datacenter->location;
     }
 
     /**
@@ -116,16 +116,16 @@ class User {
     {
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(!empty($config->interfaces->wan) && !empty($config->interfaces->lan) && !empty($config->interfaces->openvpn)){
-            return $config->interfaces;
+        if(!empty($OVPNconfig->interfaces->wan) && !empty($OVPNconfig->interfaces->lan) && !empty($OVPNconfig->interfaces->openvpn)){
+            return $OVPNconfig->interfaces;
         } else {
             return false;
         }
@@ -141,24 +141,24 @@ class User {
         // The API request succeeded.
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Update credentials and session
-        $config->credentials->username = '';
-        $config->credentials->password = '';
+        $OVPNconfig->credentials->username = '';
+        $OVPNconfig->credentials->password = '';
 
-        if(isset($config->session)) {
-            unset($config->session);
+        if(isset($OVPNconfig->session)) {
+            unset($OVPNconfig->session);
         }
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {

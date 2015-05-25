@@ -48,16 +48,16 @@ class System {
     {
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(!empty($config->gui)){
-            return $config->gui;
+        if(!empty($OVPNconfig->gui)){
+            return $OVPNconfig->gui;
         } else {
             return false;
         }

@@ -112,20 +112,20 @@ class IP {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Update credentials and session
-        if(!isset($config->server)) {
+        if(!isset($OVPNconfig->server)) {
             return false;
         }
 
-        return $config->server;
+        return $OVPNconfig->server;
     }
 
     public static function getStaticAddresses()
@@ -133,22 +133,22 @@ class IP {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Verify that the pfsense path is added
-        if(empty($config->files->pfsense)){
+        if(empty($OVPNconfig->files->pfsense)){
             return false;
         }
 
         // Load the pfsense configuration file
         $xml = new \SimpleXMLElement(
-            file_get_contents($config->files->pfsense)
+            file_get_contents($OVPNconfig->files->pfsense)
         );
 
         // Verify that we have any static mappings
@@ -190,15 +190,15 @@ class IP {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        if(empty($config->files->dhcp)){
+        if(empty($OVPNconfig->files->dhcp)){
             return false;
         }
 
@@ -209,7 +209,7 @@ class IP {
         $splitpattern = "'BEGIN { RS=\"}\";} {for (i=1; i<=NF; i++) printf \"%s \", \$i; printf \"}\\n\";}'";
 
         /* stuff the leases file in a proper format into a array by line */
-        exec("/bin/cat {$config->files->dhcp} | {$awk} {$cleanpattern} | {$awk} {$splitpattern}", $leases_content);
+        exec("/bin/cat {$OVPNconfig->files->dhcp} | {$awk} {$cleanpattern} | {$awk} {$splitpattern}", $leases_content);
         $leases_count = count($leases_content);
         exec("/usr/sbin/arp -an", $rawdata);
 

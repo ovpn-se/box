@@ -62,21 +62,21 @@ class OVPN {
         // Save the best datacenter in config.json
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('status' => false, 'error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         // Update credentials and session
-        $config->datacenter = array(
+        $OVPNconfig->datacenter = array(
             'location' => $datacenters[0]->slug,
             'timestamp' => $date->getTimestamp()
         );
 
         // Save credentials and session data in the config file
-        $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Return success
         $app->response->status(200);
@@ -125,18 +125,18 @@ class OVPN {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         // Update credentials and session
-        unset($config->server);
+        unset($OVPNconfig->server);
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {
@@ -173,13 +173,13 @@ class OVPN {
 
         // Update the OpenVPN configuration file
         $client = new \OpenVPN\ClientConfig();
-        $config = $client->generate(
+        $OVPNconfig = $client->generate(
             $ip,
             $addon
         );
 
         // Verify that the configuration file was updated.
-        if(!$config) {
+        if(!$OVPNconfig) {
             \Base\Log::message(_('Konfigurationsfilen till OpenVPN uppdaterades inte. Kolla skrivbehörigheter & så att rätt tilläggstjänst las till.'));
             $app->halt(400, json_encode(array('error' => _('Konfigurationsfilen till OpenVPN uppdaterades inte. Kolla skrivbehörigheter & så att rätt tilläggstjänst las till.'))));
         }
@@ -197,18 +197,18 @@ class OVPN {
         // The API request succeeded.
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config  = json_decode($content);
+        $OVPNconfig  = json_decode($content);
 
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
         // Set server IP
-        $config->server = $ip;
+        $OVPNconfig->server = $ip;
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {

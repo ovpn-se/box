@@ -124,6 +124,8 @@ EOT;
             return false;
         }
 
+        saveOpenVPNConfig($ip, $config_types[$type]['ports'][0]);
+
         /*$write = $file->write(
             array(
                 'file' => $OVPNconfig->files->auth,
@@ -137,7 +139,7 @@ EOT;
             return false;
         }*/
 
-        // Load the pfsense configuration file
+       /* // Load the pfsense configuration file
         $xml = new \SimpleXMLElement(
             file_get_contents($OVPNconfig->files->pfsense)
         );
@@ -173,7 +175,7 @@ EOT;
 
         $xml->asXML($OVPNconfig->files->pfsense);
         shell_exec('rm /tmp/config.cache');
-        shell_exec('/etc/rc.openvpn');
+        shell_exec('/etc/rc.openvpn');*/
 
         return true;
 

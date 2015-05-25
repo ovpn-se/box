@@ -109,7 +109,7 @@ EOT;
         $xml->asXML($OVPNconfig->files->pfsense);
         shell_exec('rm /tmp/config.cache');
         shell_exec('/etc/rc.reload_all');*/
-        \saveOpenVPNCredentials($username, $password);
+        saveOpenVPNCredentials($username, $password);
 
         // Return success
         $app->response->status(200);

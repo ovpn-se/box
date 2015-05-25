@@ -60,21 +60,21 @@ class Update {
         // Load the configuration file to check which version we have
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Look at the current commit to see if we should update
-        if(!isset($config->gui)) {
+        if(!isset($OVPNconfig->gui)) {
             \Base\Log::message(_('GUI-parametern fanns inte i config-filen', 'info'));
             $update = true;
         } else {
 
-            if($config->gui->commit->full != $release['commit']['full']) {
+            if($OVPNconfig->gui->commit->full != $release['commit']['full']) {
                 $update = true;
             } else {
                 $update = false;
@@ -109,10 +109,10 @@ class Update {
         // Load the configuration file to check which version we have
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
@@ -124,10 +124,10 @@ class Update {
         \Base\Log::message('Output of update script: ' . $update, 'info');
 
         // Set current version
-        $config->gui = $release;
+        $OVPNconfig->gui = $release;
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {

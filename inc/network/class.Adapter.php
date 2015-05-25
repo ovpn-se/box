@@ -79,20 +79,20 @@ class Adapter {
         // Fetch contents from the config file.
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
-        $config->interfaces->wan     = $data['wan'];
-        $config->interfaces->lan     = $data['lan'];
-        $config->interfaces->openvpn = $data['openvpn'];
+        $OVPNconfig->interfaces->wan     = $data['wan'];
+        $OVPNconfig->interfaces->lan     = $data['lan'];
+        $OVPNconfig->interfaces->openvpn = $data['openvpn'];
 
         // Save credentials and session data in the config file
-        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($config,JSON_PRETTY_PRINT)));
+        $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
 
         // Verify that the file write was successful
         if(!$write) {

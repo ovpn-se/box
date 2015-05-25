@@ -11,28 +11,28 @@ namespace OpenVPN;
 
 class OpenVPN {
 
-    public $config;
+    public $OVPNconfig;
 
     public function __construct()
     {
 
         $file    = new \Shell\File();
         $content = $file->read('config.json');
-        $config = json_decode($content);
+        $OVPNconfig = json_decode($content);
 
         // Verify that we could read the contents
-        if(!$content || !$config) {
+        if(!$content || !$OVPNconfig) {
             \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Check if file location for the client configuration is added
-        if(empty($config->files->auth)) {
+        if(empty($OVPNconfig->files->auth)) {
             //error_log('fel config.');
             return false;
         }
 
-        $this->config = $config->files->auth;
+        $this->OVPNconfig = $OVPNconfig->files->auth;
 
         return true;
     }
