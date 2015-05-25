@@ -74,6 +74,7 @@ class OpenVPN {
             $execute = $bash . ' restart --config ' . $this->OVPNconfig;
         } else {
             $execute = $bash . ' stop';
+
         }
         exec ($execute, $return, $return_var);
 
@@ -103,6 +104,7 @@ class OpenVPN {
      */
     public function stop()
     {
+        \handleKillswitch(false);
         return $this->execute('stop');
     }
 

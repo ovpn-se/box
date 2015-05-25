@@ -57,6 +57,11 @@ require('./assets/template/top.php');
                 <?php
                 if($addons) {
                     foreach($addons as $addonType => $addonData) {
+
+                        if($addonType == 'proxy') {
+                            continue;
+                        }
+
                         echo '<option value="' . $addonType . '">' . \Base\String::addonAbbreviationToText($addonType) . '</option>';
                     }
                 }
