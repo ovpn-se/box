@@ -20,9 +20,6 @@ class ClientConfig {
         require('/etc/inc/config.inc');
         require('/etc/inc/filter.inc');
 
-        // Make the config variable accessible
-        global $config;
-
         $config_types = array(
             'normal' => array(
                 'ports' => array(

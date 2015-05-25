@@ -24,9 +24,6 @@ class User {
         require('/etc/inc/config.inc');
         require('/etc/inc/filter.inc');
 
-        // Make the config variable accessible
-        global $config;
-
         $app = Slim::getInstance();
 
         // Fetch variables
