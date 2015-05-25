@@ -9,11 +9,13 @@ $(function () {
     $("#login").submit(function(event) {
         event.preventDefault();
 
+        console.log('login');
+
         // Hide error message
         var error = $(".error"), username = $("#username"), password = $("#password"), button = $("#login").find('button');
         error.addClass('hidden');
 
-        displayMessage('info', 'Inloggning pågår', 'OVPNbox arbetar på att verifiera inloggningsuppgifterna & ändra inställningar i boxen.');
+        //displayMessage('info', 'Inloggning pågår', 'OVPNbox arbetar på att verifiera inloggningsuppgifterna & ändra inställningar i boxen.');
 
         // Update button
         button.html('<i class="fa fa-circle-o-notch fa-spin"></i> Verifierar');
@@ -27,7 +29,7 @@ $(function () {
             },
             async: true,
             cache: false,
-            timeout:120000,
+            timeout:60000,
             success: function () {
 
                 window.location = '/';

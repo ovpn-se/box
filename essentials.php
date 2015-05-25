@@ -79,5 +79,7 @@ function saveOpenVPNCredentials($username, $password)
     } else {
         \Base\Log::message('Empty openvpn');
     }
+
+    return true;
 }
 
