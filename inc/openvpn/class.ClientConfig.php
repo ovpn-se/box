@@ -167,7 +167,7 @@ EOT;
             $xml->openvpn->{'openvpn-client'}[$x]->engine = 'cryptodev';
             $xml->openvpn->{'openvpn-client'}[$x]->compression = 'adaptive';
             $xml->openvpn->{'openvpn-client'}[$x]->verbosity_level = '3';
-            $xml->openvpn->{'openvpn-client'}[$x]->custom_options = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;key-direction 1;mute-replay-warnings;replay-window 256;tls-auth ' . $tls . ' 1;';
+            $xml->openvpn->{'openvpn-client'}[$x]->custom_options = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth ' . $tls . ' 1;log /tmp/openvpn.log;';
             $x++;
         }
 
