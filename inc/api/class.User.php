@@ -78,38 +78,7 @@ class User {
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
-        $credentials = <<<EOT
-{$username}
-{$password}
-EOT;
-
-        // Save OpenVPN credentials
-        $write = $file->write(array('file' => '/var/etc/openvpn/client1.up', 'content' => $credentials));
-
-        /*// Verify that the file write was successful
-        if(!$write) {
-            \Base\Log::message(_('Misslyckades att skriva inloggningsuppgifter till OpenVPN konfiguration.'));
-            $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
-        }
-
-        // Load the pfsense configuration file
-        $xml = new \SimpleXMLElement(
-            file_get_contents($OVPNconfig->files->pfsense)
-        );
-
-        // Loop through all entries
-        $x = 0;
-        foreach($xml->openvpn->{'openvpn-client'} as $mapping) {
-
-            $xml->openvpn->{'openvpn-client'}[$x]->auth_user = $username;
-            $xml->openvpn->{'openvpn-client'}[$x]->auth_pass = $password;
-            $x++;
-        }
-
-        $xml->asXML($OVPNconfig->files->pfsense);
-        shell_exec('rm /tmp/config.cache');
-        shell_exec('/etc/rc.reload_all');*/
-        saveOpenVPNCredentials($username, $password);
+        \saveOpenVPNCredentials($username, $password);
 
         // Return success
         $app->response->status(200);
