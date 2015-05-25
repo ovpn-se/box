@@ -80,7 +80,7 @@ class OpenVPN {
 
         // Verify response
         if($return_var != "0") {
-            \Base\Log::message('OpenVPN-skript returnerade ett misslyckande');
+            \Base\Log::message('OpenVPN-skript returnerade ett misslyckande: ' . $return_var);
             return false;
         }
 
