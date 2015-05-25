@@ -1,6 +1,6 @@
 $(function () {
 
-
+    $("#username").focus();
 
     /**
      * Används när man ska ansluta. Antingen har personen valt 'Välj bäst server' eller så
@@ -10,27 +10,41 @@ $(function () {
         event.preventDefault();
 
         // Hide error message
-        var error = $(".error");
+        var error = $(".error"), username = $("#username"), password = $("#password"), button = $("#login").find('button');
         error.addClass('hidden');
 
+        displayMessage('info', 'Inloggning pågår', 'OVPNbox arbetar på att verifiera inloggningsuppgifterna & ändra inställningar i boxen.');
+
         // Update button
-        var button = $("#login").find('button');
         button.html('<i class="fa fa-circle-o-notch fa-spin"></i> Verifierar');
 
-        // Sent login attempt
-        var login =  verifyCredentials($("#username").val(), $("#password").val());
+        $.ajax({
+            type: "POST",
+            url:  "/api/authenticate",
+            data: {
+                username: username,
+                password: password
+            },
+            async: true,
+            cache: false,
+            timeout:120000,
+            success: function () {
 
-        // Verify
-        if(login.auth) {
+                window.location = '/';
 
-            // Success. Redirect to main page
-            window.location = '/';
-        } else {
+            },
+            error: function(xhr, textStatus, errorThrown ) {
 
-            // Show error message
-            error.html(login.error).removeClass('hidden');
-            button.html('Logga in');
-        }
+                try {
+                    var err = JSON.parse(xhr.responseText);
+                } catch(error) {
+                    var err = [{"error": "Ett tekniskt fel har skett."}];
+                }
+
+                displayMessage('error', 'Fel', err.error);
+                button.html('Logga in');
+            }
+        });
     });
 
 });

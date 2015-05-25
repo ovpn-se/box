@@ -32,7 +32,10 @@ require('./assets/template/top.php');
 </div>
 <div class="col-sm-6">
     <p class="text">
-        För att börja använda OVPNbox så måste du logga in på ditt konto på OVPN. Ange ditt användarnamn och lösenord.
+        För att börja använda OVPNbox så måste du logga in på ditt konto på OVPN.
+    </p>
+    <p class="text">
+        Ange ditt användarnamn och lösenord.
     </p>
 </div>
 
