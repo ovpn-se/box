@@ -49,29 +49,29 @@ class OpenVPN {
 
         // Verify that bash script is executable
         if(!is_executable($bash)) {
-            error_log('går ej att exekvera');
+            \Base\Log::message('Går ej att exekvera ' . $bash);
             return false;
         }
 
         // Verify that configuration file exists
         if($command == "start") {
-            if(!file_exists($this->config)) {
-                error_log('finns ej: ' . $this->config);
+            if(!file_exists($this->OVPNconfig)) {
+                \Base\Log::message('Konfigurationsfilen finns ej: ' . $this->OVPNconfig);
                 return false;
             }
         }
 
         // Verify that command is valid
         if(!in_array($command, array('start', 'stop', 'restart'))) {
-            error_log( 'felaktigt kommando');
+            \Base\Log::message('Felaktigt kommando: ' . $command);
             return false;
         }
 
         // Execute the command
         if($command == "start") {
-            $execute = $bash . ' start --config ' . $this->config;
+            $execute = $bash . ' start --config ' . $this->OVPNconfig;
         } elseif($command == "start") {
-            $execute = $bash . ' restart --config ' . $this->config;
+            $execute = $bash . ' restart --config ' . $this->OVPNconfig;
         } else {
             $execute = $bash . ' stop';
         }
@@ -79,6 +79,7 @@ class OpenVPN {
 
         // Verify response
         if($return_var != "0") {
+            \Base\Log::message('Starta OpenVPN-skript returnerade ett misslyckande');
             return false;
         }
 
