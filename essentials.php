@@ -116,7 +116,7 @@ function saveOpenVPNConfig($ip, $port)
             $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
             $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
             $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
-            $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log /tmp/openvpn.log;writepid /var/run/openvpn_ovpn1.pid;';
+            $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log /tmp/openvpn.log;writepid /var/run/openvpn_client1.pid;';
         }
 
         \write_config('Updated OpenVPN credentials', false, true);
