@@ -159,16 +159,16 @@ function handleKillswitch($active)
         if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 0) {
             $config['ovpn_killswitch'] = 1;
             \write_config('Disabled the killswitch', false, true);
-            \filter_configure_sync();
-            \filter_flush_state_table_on_interface($ovpn_wan);
+            shell_exec('/etc/rc.filter_configure_sync');
+            shell_exec('/sbin/pfctl -F state -i ' . $ovpn_wan);
         }
     } else {
 
         if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 1) {
             $config['ovpn_killswitch'] = 0;
             \write_config('Disabled the killswitch', false, true);
-            \filter_configure_sync();
-            \filter_flush_state_table_on_interface($ovpn_wan);
+            shell_exec('/etc/rc.filter_configure_sync');
+            shell_exec('/sbin/pfctl -F state -i ' . $ovpn_wan);
 
         }
     }
