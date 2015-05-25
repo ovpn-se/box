@@ -66,7 +66,7 @@ spl_autoload_register('my_autoloader');
 function saveOpenVPNCredentials($username, $password)
 {
     require('/etc/inc/config.inc');
-
+    global $config;
 
     if(!empty($config['openvpn']['openvpn-client'])) {
         foreach($config['openvpn']['openvpn-client'] as $key => $client) {
