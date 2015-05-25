@@ -76,7 +76,7 @@ class File {
         }
 
         // Make the filesystem writeable
-        shell_exec('mount -o rw /');
+        \Shell\System::setReadWrite();
 
         // Let's make sure the file exists and is writable first.
         if (is_writable($data['file'])) {
@@ -86,7 +86,7 @@ class File {
                 \Base\Log::message('Could not open file (' . $data['file'] . ')');
 
                 // Make the filesystem readonly
-                shell_exec('mount -o ro /');
+                \Shell\System::setReadOnly();
                 return false;
             }
 
@@ -103,12 +103,13 @@ class File {
             fclose($handle);
 
             // Make the filesystem readonly
-            shell_exec('mount -o ro /');
+            \Shell\System::setReadOnly();
             return true;
 
         } else {
             error_log('File was not writeable (' . $data['file'] . ')');
-            shell_exec('mount -o ro /');
+            // Make the filesystem readonly
+            \Shell\System::setReadOnly();
             return false;
         }
     }
@@ -136,14 +137,14 @@ class File {
         }
 
         // Make the filesystem writeable
-        shell_exec('mount -o rw /');
+        \Shell\System::setReadWrite();
 
         // Create file
         $fp = fopen($filename,"w");
         fclose($fp);
 
         // Make the filesystem read-only
-        shell_exec('mount -o ro /');
+        \Shell\System::setReadOnly();
 
         // Verify that the file was successfully created
         if(!file_exists($filename)) {

@@ -162,4 +162,14 @@ class System {
         return '-';
     }
 
+    public static function setReadOnly()
+    {
+        shell_exec('/etc/rc.conf_mount_ro');
+    }
+
+    public static function setReadWrite()
+    {
+        shell_exec('/etc/rc.conf_mount_rw');
+    }
+
 } 

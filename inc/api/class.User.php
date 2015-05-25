@@ -20,10 +20,6 @@ class User {
     public function authenticate()
     {
 
-        // Include pfsense configuration files
-        require('/etc/inc/config.inc');
-        require('/etc/inc/filter.inc');
-
         $app = Slim::getInstance();
 
         // Fetch variables
@@ -96,13 +92,17 @@ EOT;
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
+        // Include pfsense configuration files
+        require('/etc/inc/config.inc');
+        \Base\Log::message(json_encode($config));
+        
         if(!empty($config['openvpn']['openvpn-client'])) {
-            foreach($config['openvpn']['openvpn-client'] as $key => $client) {
+           /* foreach($config['openvpn']['openvpn-client'] as $key => $client) {
                 $config['openvpn']['openvpn-client'][$key]['auth_user'] = $username;
                 $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
             }
 
-            \write_config('Updated OpenVPN credentials', true, true);
+            \write_config('Updated OpenVPN credentials', true, true);*/
         } else {
             \Base\Log::message('Empty openvpn');
         }

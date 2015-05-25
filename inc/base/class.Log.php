@@ -39,6 +39,9 @@ class Log {
             if(!$create) {
 
                 // Failed to create file.
+                \Shell\System::setReadWrite();
+                error_log('Failed to create file');
+                \Shell\System::setReadOnly();
                 return false;
             }
         }
@@ -67,7 +70,9 @@ class Log {
 
         // Verify that the write was successful
         if(!$write) {
+            \Shell\System::setReadWrite();
             error_log('Failed to log entry (' . $string . ')');
+            \Shell\System::setReadOnly();
             return false;
         }
 
