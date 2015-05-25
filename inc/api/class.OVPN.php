@@ -102,7 +102,13 @@ class OVPN {
             $app->halt(502);
         }
 
-        var_dump($killswitch);
+        if($killswitch == 'true') {
+            $activateKillswitch = true;
+        } else {
+            $activateKillswitch = false;
+        }
+
+        var_dump($activateKillswitch);
 
         $app->response->status(200);
         $app->response->body(json_encode(array('status' => true)));
