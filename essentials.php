@@ -152,21 +152,26 @@ function handleKillswitch($active)
     // Make the config variable accessible
     global $config;
 
+    $ovpn_wan = \get_real_interface("wan");
 
     if($active) {
 
         if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 0) {
             $config['ovpn_killswitch'] = 1;
+            \write_config('Disabled the killswitch', false, true);
+            \filter_configure_sync();
+            \filter_flush_state_table_on_interface($ovpn_wan);
         }
     } else {
 
         if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 1) {
             $config['ovpn_killswitch'] = 0;
+            \write_config('Disabled the killswitch', false, true);
+            \filter_configure_sync();
+            \filter_flush_state_table_on_interface($ovpn_wan);
+
         }
     }
-
-    \write_config('Toggled the killswitch', false, true);
-    \filter_configure();
 
     return true;
 }
