@@ -43,7 +43,10 @@ class ClientConfig {
             return false;
         }
 
-        saveOpenVPNConfig($ip, $config_types[$type]['ports'][0]);
+        $vpnId   = 1;
+        $customId = 1;
+
+        saveOpenVPNConfig($vpnId, $customId, $ip, $config_types[$type]['ports']);
 
         return true;
 
