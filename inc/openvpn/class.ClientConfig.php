@@ -124,7 +124,7 @@ EOT;
             return false;
         }
 
-        $write = $file->write(
+        /*$write = $file->write(
             array(
                 'file' => $OVPNconfig->files->auth,
                 'content' => $clientconfig
@@ -135,12 +135,17 @@ EOT;
         if(!$write) {
             \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
             return false;
-        }
+        }*/
 
         // Load the pfsense configuration file
         $xml = new \SimpleXMLElement(
             file_get_contents($OVPNconfig->files->pfsense)
         );
+
+        $tls = '/var/etc/openvpn/ovpn-tls.key';
+        if(!file_exists($tls)) {
+            file_put_contents($tls, fopen("https://www.ovpn.se/download/ovpn-tls.key", 'r'));
+        }
 
         // Loop through all entries
         $x = 0;
@@ -161,33 +166,13 @@ EOT;
             $xml->openvpn->{'openvpn-client'}[$x]->compression = 'adaptive';
             $xml->openvpn->{'openvpn-client'}[$x]->verbosity_level = '3';
             $xml->openvpn->{'openvpn-client'}[$x]->custom_options = <<<EOT
-remote-cert-tls server;
-reneg-sec 432000;
+remote-cert-tls server;reneg-sec 432000;
 persist-key;
 persist-tun;
 key-direction 1;
 mute-replay-warnings;
 replay-window 256;
-&lt;tls-auth&gt;
------BEGIN OpenVPN Static key V1-----
-81782767e4d59c4464cc5d1896f1cf60
-15017d53ac62e2e3b94b889e00b2c69d
-dc01944fe1c6d895b4d80540502eb719
-10b8d785c9efa9e3182343532adffe1c
-fbb7bb6eae39c502da2748edf0fb89b8
-a20b0a1085cc1f06135037881bc0c4ad
-8f2c0f4f72d2ab466fb54af3d8264c5f
-ddeb0f21aa0ca41863678f5fc4c44de4
-ca0926b36dfddc42c6f2fabd1694bdc8
-215b2d223b9c21dc6734c2c778093187
-afb8c33403b228b9af68b540c284f6d1
-83bcc88bd41d47bd717996e499ce1cbb
-fa768a9723c19c58314c4d19cfed82e5
-43ee92e73d38ad26d4fbec231c0f9f3b
-30773a5c87792e9bc7c34e8d7611002e
-bedd044e48a0f1f96527bfdcc940aa09
------END OpenVPN Static key V1-----
-&lt;/tls-auth&gt;
+tls-auth {$tls} 1;
 EOT;
             $x++;
         }
