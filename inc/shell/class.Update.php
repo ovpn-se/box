@@ -121,7 +121,7 @@ class Update {
         $update = shell_exec('/opt/ovpn/sbin/update-from-master');
         $this->postUpdate();
         \Base\Log::message('Update of OVPN was executed. Current version: \'' . $release . '\'', 'info');
-        \Base\Log::message('Output of update script: ' . $update, 'info');
+        \Base\Log::message('Output of update script:  ' . $update, 'info');
 
         // Set current version
         $OVPNconfig->gui = $release;
