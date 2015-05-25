@@ -93,21 +93,23 @@ EOT;
         }
 
         // Include pfsense configuration files
-        require('/etc/inc/config.inc');
-        \Base\Log::message(json_encode($config));
+        // Load the pfsense configuration file
+        $xml = new \SimpleXMLElement(
+            file_get_contents($OVPNconfig->files->pfsense)
+        );
 
-        if(!empty($config['openvpn']['openvpn-client'])) {
-            foreach($config['openvpn']['openvpn-client'] as $key => $client) {
-                $config['openvpn']['openvpn-client'][$key]['auth_user'] = $username;
-                $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
-            }
+        // Loop through all entries
+        $x = 0;
+        foreach($xml->openvpn->{'openvpn-client'} as $mapping) {
 
-            \Base\Log::message('Updated configuration file.');
-            \write_config('Updated OpenVPN credentials', true, true);
-        } else {
-            \Base\Log::message('Empty openvpn');
+            $xml->openvpn->{'openvpn-client'}[$x]->auth_user = $username;
+            $xml->openvpn->{'openvpn-client'}[$x]->auth_pass = $password;
+            $x++;
         }
 
+        $xml->asXML($OVPNconfig->files->pfsense);
+        shell_exec('rm /tmp/config.cache');
+        shell_exec('/etc/rc.reload_all');
 
         // Return success
         $app->response->status(200);
