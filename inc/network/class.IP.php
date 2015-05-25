@@ -365,25 +365,4 @@ class IP {
 
         return $leases;
     }
-
-    public function dagah()
-    {
-        require('/etc/inc/config.inc');
-        require('/etc/inc/filter.inc');
-
-        // Make the config variable accessible
-        global $config;
-
-        var_dump($config['ovpn_killswitch']);
-
-        if (isset($config['ovpn_killswitch']) && $config['ovpn_killswitch'] == 1) {
-            $config['ovpn_killswitch'] = 0;
-        } else {
-            $config['ovpn_killswitch'] = 1;
-
-        }
-
-        write_config('Toggled the killswitch', true, true);
-        filter_configure();
-    }
 } 

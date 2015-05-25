@@ -96,6 +96,15 @@ function saveOpenVPNCredentials($username, $password)
     return true;
 }
 
+/**
+ * Generates openvpn configuration file
+ *
+ * @param $vpnID
+ * @param $customID
+ * @param $ip
+ * @param $ports
+ * @return bool
+ */
 function saveOpenVPNConfig($vpnID, $customID, $ip, $ports)
 {
     global $g, $config;
@@ -129,6 +138,35 @@ function saveOpenVPNConfig($vpnID, $customID, $ip, $ports)
         \write_config('Updated OpenVPN credentials', false, true);
         shell_exec('/etc/rc.openvpn');
     }
+
+    return true;
+}
+
+/**
+ * Enables/disables the killswitch
+ *
+ */
+function handleKillswitch($active)
+{
+
+    // Make the config variable accessible
+    global $config;
+
+
+    if($active) {
+
+        if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 0) {
+            $config['ovpn_killswitch'] = 1;
+        }
+    } else {
+
+        if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 1) {
+            $config['ovpn_killswitch'] = 0;
+        }
+    }
+
+    \write_config('Toggled the killswitch', false, true);
+    \filter_configure();
 
     return true;
 }

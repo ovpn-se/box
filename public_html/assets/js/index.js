@@ -340,6 +340,9 @@ function connect(ip) {
                 $.ajax({
                     type: "GET",
                     url:  "/api/connected",
+                    data: {
+                        killswitch:$("#killswitch").is(":checked")
+                    },
                     async: true,
                     timeout:60000,
                     success: function () {

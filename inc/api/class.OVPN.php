@@ -93,12 +93,16 @@ class OVPN {
 
         $app = Slim::getInstance();
 
+        $killswitch = $app->request->get('killswitch');
+
         // Check if connected
         $connected = \Network\Adapter::isConnectedToOVPN();
 
         if(!$connected) {
             $app->halt(502);
         }
+
+        var_dump($killswitch);
 
         $app->response->status(200);
         $app->response->body(json_encode(array('status' => true)));
@@ -163,10 +167,9 @@ class OVPN {
         // Hämta variabler.
         $ip           = $app->request->post('ip');
         $addon        = $app->request->post('addon');
-        $killswitch   = $app->request->post('killswitch');
 
         // Verifiera att parametrarna är angivna.
-        if(is_null($ip) || is_null($addon) || is_null($killswitch)) {
+        if(is_null($ip) || is_null($addon)) {
             \Base\Log::message(_('Alla parametrar är inte angivna. Krävs: ip, addon, killswitch'));
             $app->halt(400, json_encode(array('error' => _('Alla parametrar är inte angivna.'))));
         }
