@@ -55,8 +55,10 @@ require('./assets/template/top.php');
             <select class="form-control" id="addonId">
                 <option value="normal" selected>Ingen tilläggstjänst</option>
                 <?php
-                foreach($addons as $addonType => $addonData) {
-                    echo '<option value="' . $addonType . '">' . \Base\String::addonAbbreviationToText($addonType) . '</option>';
+                if($addons) {
+                    foreach($addons as $addonType => $addonData) {
+                        echo '<option value="' . $addonType . '">' . \Base\String::addonAbbreviationToText($addonType) . '</option>';
+                    }
                 }
                 ?>
             </select>

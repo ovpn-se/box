@@ -87,6 +87,7 @@ function saveOpenVPNCredentials($username, $password)
         foreach($config['openvpn']['openvpn-client'] as $key => $client) {
             $config['openvpn']['openvpn-client'][$key]['auth_user'] = $username;
             $config['openvpn']['openvpn-client'][$key]['auth_pass'] = $password;
+            $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN - ' . ($key+1);
         }
 
         \write_config('Updated OpenVPN credentials', false, true);
@@ -108,14 +109,14 @@ function saveOpenVPNConfig($ip, $port)
             $config['openvpn']['openvpn-client'][$key]['server_port'] = $port;
             $config['openvpn']['openvpn-client'][$key]['resolve_retry'] = 'yes';
             $config['openvpn']['openvpn-client'][$key]['proxy_authtype'] = 'none';
-            $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN';
+            $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN - ' . ($key+1);
             $config['openvpn']['openvpn-client'][$key]['mode'] = 'p2p_tls';
             $config['openvpn']['openvpn-client'][$key]['crypto'] = 'AES-256-CBC';
             $config['openvpn']['openvpn-client'][$key]['digest'] = 'SHA1';
             $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
             $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
             $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
-            $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log /tmp/openvpn.log;';
+            $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log /tmp/openvpn.log;writepid /var/run/openvpn_ovpn1.pid;';
         }
 
         \write_config('Updated OpenVPN credentials', false, true);

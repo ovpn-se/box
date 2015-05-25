@@ -28,7 +28,7 @@ class OpenVPN {
 
         // Check if file location for the client configuration is added
         if(empty($OVPNconfig->files->auth)) {
-            //error_log('fel config.');
+            \Base\Log::message(_('The auth file is empty.'));
             return false;
         }
 
@@ -79,7 +79,7 @@ class OpenVPN {
 
         // Verify response
         if($return_var != "0") {
-            \Base\Log::message('Starta OpenVPN-skript returnerade ett misslyckande');
+            \Base\Log::message('OpenVPN-skript returnerade ett misslyckande');
             return false;
         }
 
