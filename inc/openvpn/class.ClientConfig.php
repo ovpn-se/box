@@ -144,7 +144,9 @@ EOT;
 
         $tls = '/var/etc/openvpn/ovpn-tls.key';
         if(!file_exists($tls)) {
+            \Shell\System::setReadWrite();
             file_put_contents($tls, fopen("https://www.ovpn.se/download/ovpn-tls.key", 'r'));
+            \Shell\System::setReadOnly();
         }
 
         // Loop through all entries
@@ -165,21 +167,13 @@ EOT;
             $xml->openvpn->{'openvpn-client'}[$x]->engine = 'cryptodev';
             $xml->openvpn->{'openvpn-client'}[$x]->compression = 'adaptive';
             $xml->openvpn->{'openvpn-client'}[$x]->verbosity_level = '3';
-            $xml->openvpn->{'openvpn-client'}[$x]->custom_options = <<<EOT
-remote-cert-tls server;reneg-sec 432000;
-persist-key;
-persist-tun;
-key-direction 1;
-mute-replay-warnings;
-replay-window 256;
-tls-auth {$tls} 1;
-EOT;
+            $xml->openvpn->{'openvpn-client'}[$x]->custom_options = 'remote-cert-tls server;reneg-sec 432000;persist-key;persist-tun;key-direction 1;mute-replay-warnings;replay-window 256;tls-auth ' . $tls . ' 1;';
             $x++;
         }
 
         $xml->asXML($OVPNconfig->files->pfsense);
         shell_exec('rm /tmp/config.cache');
-        shell_exec('/etc/rc.reload_all');
+        shell_exec('/etc/rc.openvpn');
 
         return true;
 
