@@ -128,7 +128,7 @@ function saveOpenVPNConfig($vpnID, $customID, $ip, $ports)
                 $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
                 $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
                 $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '4';
-                $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote ' . $ip . ' ' . $ports[1] . ';remote-random;remote-cert-tls server;reneg-sec 432000;mute-replay-warnings;replay-window 256;tls-auth /var/etc/openvpn/ovpn-tls.key 1;log-append /tmp/openvpn.log';
+                $config['openvpn']['openvpn-client'][$key]['custom_options'] = 'remote ' . $ip . ' ' . $ports[1] . ';remote-random;remote-cert-tls server;reneg-sec 432000;mute-replay-warnings;replay-window 256;tls-auth /opt/ovpn/keys/ovpn-tls.key 1;log-append /tmp/openvpn.log';
 
             }
 
