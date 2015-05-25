@@ -92,7 +92,6 @@ EOT;
             $app->halt(500, json_encode(array('error' => 'Ett tekniskt fel har inträffat.')));
         }
 
-        // Include pfsense configuration files
         // Load the pfsense configuration file
         $xml = new \SimpleXMLElement(
             file_get_contents($OVPNconfig->files->pfsense)

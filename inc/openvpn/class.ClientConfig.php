@@ -15,11 +15,6 @@ class ClientConfig {
 
     public function generate($ip, $type)
     {
-
-        // Include pfsense configuration files
-        require('/etc/inc/config.inc');
-        require('/etc/inc/filter.inc');
-
         $config_types = array(
             'normal' => array(
                 'ports' => array(
@@ -142,18 +137,30 @@ EOT;
             return false;
         }
 
-        if(!empty($config['openvpn']['openvpn-client'])) {
-            foreach($config['openvpn']['openvpn-client'] as $key => $client) {
-                $config['openvpn']['openvpn-client'][$key]['protocol'] = 'UDP';
-                $config['openvpn']['openvpn-client'][$key]['dev_mode'] = 'tun';
-                $config['openvpn']['openvpn-client'][$key]['interface'] = 'wan';
-                $config['openvpn']['openvpn-client'][$key]['server_addr'] = $ip;
-                $config['openvpn']['openvpn-client'][$key]['server_port'] = $config_types[$type]['ports'][0];
-                $config['openvpn']['openvpn-client'][$key]['resolve_retry'] = 'yes';
-                $config['openvpn']['openvpn-client'][$key]['proxy_authtype'] = 'none';
-                $config['openvpn']['openvpn-client'][$key]['description'] = 'OVPN';
-                $config['openvpn']['openvpn-client'][$key]['mode'] = 'p2p_tls';
-                $config['openvpn']['openvpn-client'][$key]['custom_options'] = <<<EOT
+        // Load the pfsense configuration file
+        $xml = new \SimpleXMLElement(
+            file_get_contents($OVPNconfig->files->pfsense)
+        );
+
+        // Loop through all entries
+        $x = 0;
+        foreach($xml->openvpn->{'openvpn-client'} as $mapping) {
+
+            $xml->openvpn->{'openvpn-client'}[$x]->protocol = 'UDP';
+            $xml->openvpn->{'openvpn-client'}[$x]->dev_mode = 'tun';
+            $xml->openvpn->{'openvpn-client'}[$x]->interface = 'wan';
+            $xml->openvpn->{'openvpn-client'}[$x]->server_addr = $ip;
+            $xml->openvpn->{'openvpn-client'}[$x]->server_port = $config_types[$type]['ports'][0];
+            $xml->openvpn->{'openvpn-client'}[$x]->resolve_retry = 'yes';
+            $xml->openvpn->{'openvpn-client'}[$x]->proxy_authtype = 'none';
+            $xml->openvpn->{'openvpn-client'}[$x]->description = 'OVPN';
+            $xml->openvpn->{'openvpn-client'}[$x]->mode = 'p2p_tls';
+            $xml->openvpn->{'openvpn-client'}[$x]->crypto = 'AES-256-CBC';
+            $xml->openvpn->{'openvpn-client'}[$x]->digest = 'SHA1';
+            $xml->openvpn->{'openvpn-client'}[$x]->engine = 'cryptodev';
+            $xml->openvpn->{'openvpn-client'}[$x]->compression = 'adaptive';
+            $xml->openvpn->{'openvpn-client'}[$x]->verbosity_level = '3';
+            $xml->openvpn->{'openvpn-client'}[$x]->custom_options = <<<EOT
 remote-cert-tls server;
 reneg-sec 432000;
 persist-key;
@@ -182,16 +189,12 @@ bedd044e48a0f1f96527bfdcc940aa09
 -----END OpenVPN Static key V1-----
 &lt;/tls-auth&gt;
 EOT;
-
-                $config['openvpn']['openvpn-client'][$key]['crypto'] = 'AES-256-CBC';
-                $config['openvpn']['openvpn-client'][$key]['digest'] = 'SHA1';
-                $config['openvpn']['openvpn-client'][$key]['engine'] = 'cryptodev';
-                $config['openvpn']['openvpn-client'][$key]['compression'] = 'adaptive';
-                $config['openvpn']['openvpn-client'][$key]['verbosity_level'] = '3';
-            }
-
-            \write_config('Updated OpenVPN settings', true, true);
+            $x++;
         }
+
+        $xml->asXML($OVPNconfig->files->pfsense);
+        shell_exec('rm /tmp/config.cache');
+        shell_exec('/etc/rc.reload_all');
 
         return true;
 
