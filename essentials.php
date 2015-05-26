@@ -221,9 +221,13 @@ function activatePortForwading($ip, $port, $proto)
     );
 
 
+    echo 'test1';
     \write_config('Added port forward for host', false, true);
+    echo 'test2';
     shell_exec('/etc/rc.filter_configure_sync');
+    echo 'test3';
     shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
+    echo 'test4';
 
     return true;
 
