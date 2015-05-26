@@ -45,7 +45,7 @@ class BypassVPN {
      *
      * @return bool
      */
-    public static function show() {
+    public static function get() {
         return showVPNBypassHosts();
     }
 

@@ -13,6 +13,9 @@ $dhcp = \Network\IP::getDHCPleases();
 // Fetch static IP addresses
 $static = \Network\IP::getStaticAddresses();
 
+// Fetch hosts that bypass VPN
+$bypass = \Network\BypassVPN::get();
+
 
 $data = array(
     'page' => 'devices'
@@ -38,6 +41,7 @@ require('./assets/template/top.php');
             <th>IP</th>
             <th>MAC-adress</th>
             <th>Status</th>
+            <th>VPN</th>
         </tr>
         </thead>
         <tbody>
@@ -56,6 +60,13 @@ require('./assets/template/top.php');
             } else {
                 $hostname = $entry['hostname'];
             }
+
+            if(isset($bypass[md5($entry['ip'])])) {
+                $bypassEntry = '<a href="javascript:void(0);" class="remove_bypass" title="Klicka för att skydda enheten bakom OVPN" data-ip="' . $entry['ip'] . '"><i class="fa fa-shield"></i></a>';
+            } else {
+                $bypassEntry = '<a href="javascript:void(0);" class="activate_bypass" title="Klicka för att pausa enhetens skydd" data-ip="' . $entry['ip'] . '"><i class="fa fa-pause"></i></a>';
+            }
+
             echo
                 '<tr>' .
                 '<th scope="row">' . $x . '</th>' .
@@ -63,6 +74,7 @@ require('./assets/template/top.php');
                 '<td>' . $entry['ip'] . '</td>' .
                 '<td>' . $entry['mac'] . '</td>' .
                 '<td>' . $online . '</td>' .
+                '<td>' . $bypassEntry . '</td>' .
                 '</tr>';
 
             $x++;

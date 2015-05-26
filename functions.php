@@ -84,16 +84,16 @@ function handleKillswitch($active)
 
     if($active) {
 
-        if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 0) {
-            $config['ovpn_killswitch'] = 1;
+        if(!isset($config['ovpn']['ovpn_killswitch']) || $config['ovpn']['ovpn_killswitch'] == 0) {
+            $config['ovpn']['ovpn_killswitch'] = 1;
             \write_config('Disabled the killswitch', false, true);
             shell_exec('/etc/rc.filter_configure_sync');
             shell_exec('/sbin/pfctl -F state -i ' . $ovpn_wan);
         }
     } else {
 
-        if(!isset($config['ovpn_killswitch']) || $config['ovpn_killswitch'] == 1) {
-            $config['ovpn_killswitch'] = 0;
+        if(!isset($config['ovpn']['ovpn_killswitch']) || $config['ovpn']['ovpn_killswitch'] == 1) {
+            $config['ovpn']['ovpn_killswitch'] = 0;
             \write_config('Disabled the killswitch', false, true);
             shell_exec('/etc/rc.filter_configure_sync');
             shell_exec('/sbin/pfctl -F state -i ' . $ovpn_wan);
@@ -306,10 +306,17 @@ function showVPNBypassHosts() {
     global $g, $config;
 
     // Check so the bypass array exists in pfSenses configuration
-    if (isset($config['ovpn']['ovpn_bypass'])) {
-        return $config['ovpn']['ovpn_bypass'];
+    if (!isset($config['ovpn']['ovpn_bypass'])) {
+        return false;
     }
 
-    return false;
+    $retVal = array();
+
+    foreach($config['ovpn']['ovpn_bypass'] as $entry) {
+
+        $retVal[md5($entry['ip'])] = $entry['ip'];
+    }
+
+    return $retVal;
 
 }
