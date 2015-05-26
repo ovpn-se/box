@@ -83,10 +83,8 @@ $(function () {
             timeout:120000,
             success: function () {
 
-                console.log($(this).data('portid'));
+                $(this).parent().parent().remove();
                 console.log('el:'+ $( 'tbody tr' ).length);
-
-                $("#port-" + $(this).data('portid')).remove();
                 info.addClass('hidden');
             },
             error: function(xhr, textStatus, errorThrown ) {
