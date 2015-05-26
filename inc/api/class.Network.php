@@ -31,7 +31,7 @@ class Network {
         }
 
         // Attempt to execute the request
-        $response = \Network\Port::activate($ip, $port, $type);
+        $response = activatePortForwading($ip, $port, $type);
 
         // Handle response
         if(!$response) {
