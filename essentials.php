@@ -154,7 +154,7 @@ function handleKillswitch($active)
 {
 
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     $ovpn_wan = \get_real_interface("wan");
 
@@ -183,7 +183,7 @@ function handleKillswitch($active)
 function activatePortForwading($ip, $port, $proto)
 {
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     // Check so the input is a valid IP address
     if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
@@ -232,7 +232,7 @@ function activatePortForwading($ip, $port, $proto)
 function deactivatePortForwarding($ip,$port,$proto)
 {
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     if (isset($config['ovpn']['ports']) && !empty($config['ovpn']['ports'])) {
         foreach ($config['ovpn']['ports'] as $key => $entry) {
@@ -253,7 +253,7 @@ function showPortForwards()
 {
 
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     if (!isset($config['ovpn']['ports']) || empty($config['ovpn']['ports'])) {
         return false;
@@ -278,7 +278,7 @@ function showPortForwards()
 function purgePortForwards()
 {
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     if (isset($config['ovpn']['ports'])) {
         unset($config['ovpn']['ports']);
@@ -298,7 +298,7 @@ function purgePortForwards()
 function purgeVPNBypass()
 {
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     if (isset($config['ovpn']['bypass'])) {
         unset($config['ovpn']['bypass']);
@@ -319,7 +319,7 @@ function purgeVPNBypass()
 function activateVPNBypass($ip) {
 
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     if (!isset($config['ovpn']['bypass'])) {
         $config['ovpn']['bypass'] = array();
@@ -349,7 +349,7 @@ function activateVPNBypass($ip) {
 function deactivateVPNBypass($ip) {
 
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     // Check so the bypass array exists in pfSenses configuration
     if (isset($config['ovpn']['bypass']) && !empty($config['ovpn']['bypass'])) {
@@ -381,7 +381,7 @@ function deactivateVPNBypass($ip) {
 function showVPNBypassHosts() {
 
     // Make the config variable accessible
-    global $config;
+    global $g, $config;
 
     // Check so the bypass array exists in pfSenses configuration
     if (isset($config['ovpn']['bypass'])) {
