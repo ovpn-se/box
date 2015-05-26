@@ -22,7 +22,7 @@ $(function () {
             timeout:120000,
             success: function () {
 
-                el.child().removeClass('fa-shield').addClass('fa-pause');
+                el.children().removeClass('fa-shield').addClass('fa-pause');
                 el.attr('title', 'Klicka för att pausa enhetens skydd').removeClass('remove_bypass').addClass('activate_bypass');
 
                 info.addClass('hidden');
@@ -59,7 +59,7 @@ $(function () {
             timeout:120000,
             success: function () {
 
-                el.child().removeClass('fa-pause').addClass('fa-shield');
+                el.children().removeClass('fa-pause').addClass('fa-shield');
                 el.attr('title', 'Klicka för att skydda enheten bakom OVPN').removeClass('activate_bypass').addClass('remove_bypass');
 
                 info.addClass('hidden');
