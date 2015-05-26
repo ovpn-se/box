@@ -1,36 +1,36 @@
 $(function () {
 
-    $("#username").focus();
-
     /**
-     * Används när man ska ansluta. Antingen har personen valt 'Välj bäst server' eller så
-     * har personen valt en specifik server.
+     * To open a port
      */
-    $("#login").submit(function(event) {
+    $("#port_form").submit(function(event) {
         event.preventDefault();
 
         // Hide error message
-        var error = $(".error"), username = $("#username"), password = $("#password"), button = $("#login").find('button');
+        var error = $(".error"), device = $("#device"), port_number = $("#port_number"), type = $("#port_protocol"),  button = $("#port_form").find('button');
         error.addClass('hidden');
 
-        displayMessage('info', 'Inloggning pågår', 'OVPNbox arbetar på att verifiera inloggningsuppgifterna & ändra inställningar i boxen.');
+        displayMessage('info', 'Öppnar port', 'OVPNbox arbetar på att vidarebefordra porten till enheten.');
 
         // Update button
         button.html('<i class="fa fa-circle-o-notch fa-spin"></i> Verifierar');
 
+
         $.ajax({
             type: "POST",
-            url:  "/api/authenticate",
+            url:  "/api/port",
             data: {
-                username: username.val(),
-                password: password.val()
+                ip: device.val(),
+                port: port_number.val(),
+                type: type.val()
             },
             async: true,
             cache: false,
             timeout:120000,
-            success: function () {
+            success: function (output) {
 
-                window.location = '/';
+                //window.location = '/';
+                console.log(output);
 
             },
             error: function(xhr, textStatus, errorThrown ) {
@@ -41,7 +41,7 @@ $(function () {
                 }
 
                 displayMessage('error', 'Fel', err.error);
-                button.html('Logga in');
+                button.html('Öppna port');
             }
         });
     });

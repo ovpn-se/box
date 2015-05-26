@@ -8,6 +8,9 @@ if(!\Base\User::getCredentials()) {
 }
 
 
+// Fetch all ports
+$ports = \Network\Port::get();
+
 // Fetch static IP addresses
 $static = \Network\IP::getStaticAddresses();
 
@@ -20,8 +23,9 @@ require('./assets/template/top.php');
 
 <h4 class="text-center">Portvidarebefordran</h4>
 
+    <div class="alert alert-info <?php if($ports) { echo 'hidden'; } ?>" role="alert">Det har inte några portar som är vidarebefordrade.</div>
 
-    <table class="table table-striped">
+    <table class="table table-striped <?php if(!$ports) { echo 'hidden'; } ?>">
         <thead>
         <tr>
             <th>#</th>
@@ -34,31 +38,41 @@ require('./assets/template/top.php');
         <tbody>
         <?php
         $x = 1;
-        foreach($static as $entry) {
 
-            if(\Network\Ping::isUp($entry['ip'])) {
-                $online = 'Ansluten';
-            } else {
-                $online = '-';
+        if($ports) {
+            foreach($ports as $entry) {
+
+                if($entry['type'] == "tcp") {
+                    $type = "TCP";
+                } else if($entry['type'] == "udp") {
+                    $type = "UDP";
+                } else if($entry['type'] == "both") {
+                    $type = "TCP/UDP";
+                } else {
+                    $type = "";
+                }
+
+
+
+                if(empty($static[md5($entry['ip'])]['hostname'])) {
+                    $hostname = '<i>Ej angivet</i>';
+                } else {
+                    $hostname = $static[md5($entry['ip'])]['hostname'];
+                }
+
+                echo
+                    '<tr>' .
+                    '<th scope="row">' . $x . '</th>' .
+                    '<td>' . $entry['ip'] . ' / ' . $hostname . '</td>' .
+                    '<td>' . $entry['port'] . '</td>' .
+                    '<td>' . $type . '</td>' .
+                    '<td><a href="javascript:void(0);" class="delete_port" data-ip="' . $entry['ip'] . '" data-port="' . $entry['port'] . '" data-type="' . $entry['type'] . '"><i class="fa fa-trash"></i></a></td>' .
+                    '</tr>';
+
+                $x++;
             }
-
-            if(empty($entry['hostname'])) {
-                $hostname = '<i>Ej angivet</i>';
-            } else {
-                $hostname = $entry['hostname'];
-            }
-            echo
-                '<tr>' .
-                '<th scope="row">' . $x . '</th>' .
-                '<td>' . $hostname . '</td>' .
-                '<td>' . $entry['ip'] . '</td>' .
-                '<td>' . $entry['mac'] . '</td>' .
-                '<td>' . $online . '</td>' .
-                '</tr>';
-
-            $x++;
+            unset($x);
         }
-        unset($x);
         ?>
         </tbody>
     </table>

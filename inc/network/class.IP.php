@@ -170,7 +170,7 @@ class IP {
             }
 
             // Add to array
-            $static[] = array(
+            $static[md5((string)$mapping->ipaddr)] = array(
                 'mac'      => (string)$mapping->mac,
                 'ip'       => (string)$mapping->ipaddr,
                 'hostname' => (string)$hostname

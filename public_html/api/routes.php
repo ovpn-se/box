@@ -15,3 +15,9 @@ $app->post('/disconnect',      'API\OVPN:disconnect');
 
 $app->get('/update', 'API\Update:get');
 $app->post('/update', 'API\Update:execute');
+
+$app->post('/port', 'API\Network:createPortforward');
+$app->delete('/port', 'API\Network:deletePortforward');
+
+$app->post('/bypass', 'API\Network:createBypass');
+$app->delete('/bypass', 'API\Network:deleteBypass');
