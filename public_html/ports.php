@@ -43,36 +43,39 @@ require('./assets/template/top.php');
 
             \Base\String::print_pre($ports, 'ports');
             \Base\String::print_pre($static, 'static');
-            foreach($ports as $entry) {
+            foreach($ports as $host) {
 
-                if($entry['type'] == "tcp") {
-                    $type = "TCP";
-                } else if($entry['type'] == "udp") {
-                    $type = "UDP";
-                } else if($entry['type'] == "both") {
-                    $type = "TCP/UDP";
-                } else {
-                    $type = "";
-                }
+                foreach($host as $entry) {
+
+                    if($entry['type'] == "tcp") {
+                        $type = "TCP";
+                    } else if($entry['type'] == "udp") {
+                        $type = "UDP";
+                    } else if($entry['type'] == "both") {
+                        $type = "TCP/UDP";
+                    } else {
+                        $type = "";
+                    }
 
 
 
-                if(empty($static[md5($entry['ip'])]['hostname'])) {
-                    $hostname = '<i>Ej angivet</i>';
-                } else {
-                    $hostname = $static[md5($entry['ip'])]['hostname'];
-                }
+                    if(empty($static[md5($entry['ip'])]['hostname'])) {
+                        $hostname = '<i>Ej angivet</i>';
+                    } else {
+                        $hostname = $static[md5($entry['ip'])]['hostname'];
+                    }
 
-                echo
-                    '<tr>' .
-                    '<th scope="row">' . $x . '</th>' .
-                    '<td>' . $entry['ip'] . ' / ' . $hostname . '</td>' .
-                    '<td>' . $entry['port'] . '</td>' .
-                    '<td>' . $type . '</td>' .
-                    '<td><a href="javascript:void(0);" class="delete_port" data-ip="' . $entry['ip'] . '" data-port="' . $entry['port'] . '" data-type="' . $entry['type'] . '"><i class="fa fa-trash"></i></a></td>' .
-                    '</tr>';
+                    echo
+                        '<tr>' .
+                        '<th scope="row">' . $x . '</th>' .
+                        '<td>' . $entry['ip'] . ' / ' . $hostname . '</td>' .
+                        '<td>' . $entry['port'] . '</td>' .
+                        '<td>' . $type . '</td>' .
+                        '<td><a href="javascript:void(0);" class="delete_port" data-ip="' . $entry['ip'] . '" data-port="' . $entry['port'] . '" data-type="' . $entry['type'] . '"><i class="fa fa-trash"></i></a></td>' .
+                        '</tr>';
 
-                $x++;
+                    $x++;
+                 }
             }
             unset($x);
         }
