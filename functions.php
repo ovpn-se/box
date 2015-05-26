@@ -263,7 +263,6 @@ function activateVPNBypass($ip) {
     $config['ovpn']['ovpn_bypass'][] = array('ip' => $ip);
     \write_config('Added IP address to bypass VPN', false, true);
     shell_exec('/etc/rc.filter_configure_sync');
-    shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
 
 
     $file    = new \Shell\File();
@@ -301,15 +300,6 @@ function deactivateVPNBypass($ip) {
                 shell_exec('/etc/rc.filter_configure_sync');
                 shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
 
-                $file    = new \Shell\File();
-                $content = $file->read('config.json');
-                $OVPNconfig  = json_decode($content);
-
-                if(!$content || !$OVPNconfig) {
-                    \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
-                }
-
-                shell_exec('/sbin/pfctl -F state -i ' . $OVPNconfig->interfaces->openvpn);
                 return true;
             }
         }
