@@ -203,27 +203,27 @@ function activatePortForwading($ip, $port, $proto)
     }
 
     // Create array is it doesn't already exist
-    if (!isset($config['ovpn']['ports'])) {
-        $config['ovpn']['ports'] = array();
+    if (!isset($config['ovpn_ports'])) {
+        $config['ovpn_ports'] = array();
     }
 
     // Verify that the port forward doesn't already exist
-    if(!empty($config['ovpn']['ports'])) {
-        foreach($config['ovpn']['ports'] as $entry) {
+    if(!empty($config['ovpn_ports'])) {
+        foreach($config['ovpn_ports'] as $entry) {
             if($entry['port'] == $port) {
                 return false;
             }
         }
     }
 
-    $config['ovpn']['ports'][] = array(
+    $config['ovpn_ports'][] = array(
         'ip' => $ip,
         'port' => $port,
         'type' => $proto
     );
 
     var_dump($config);
-    
+
     \write_config('Added port forward for host', false, true);
     shell_exec('/etc/rc.filter_configure_sync');
     shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
@@ -237,10 +237,10 @@ function deactivatePortForwarding($ip,$port,$proto)
     // Make the config variable accessible
     global $g, $config;
 
-    if (isset($config['ovpn']['ports']) && !empty($config['ovpn']['ports'])) {
-        foreach ($config['ovpn']['ports'] as $key => $entry) {
+    if (isset($config['ovpn_ports']) && !empty($config['ovpn_ports'])) {
+        foreach ($config['ovpn_ports'] as $key => $entry) {
             if ($entry['ip'] == $ip && $entry['port'] == $port && $entry['type'] == $proto) {
-                unset($config['ovpn']['ports'][$key]);
+                unset($config['ovpn_ports'][$key]);
                 \write_config('Removed port forward for host', false, true);
                 shell_exec('/etc/rc.filter_configure_sync');
                 shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
@@ -258,13 +258,13 @@ function showPortForwards()
     // Make the config variable accessible
     global $g, $config;
 
-    if (!isset($config['ovpn']['ports']) || empty($config['ovpn']['ports'])) {
+    if (!isset($config['ovpn_ports']) || empty($config['ovpn_ports'])) {
         return false;
     }
 
     $retVal = array();
 
-    foreach($config['ovpn']['ports'] as $entry) {
+    foreach($config['ovpn_ports'] as $entry) {
 
         $key = md5($entry['ip']);
 
@@ -283,8 +283,8 @@ function purgePortForwards()
     // Make the config variable accessible
     global $g, $config;
 
-    if (isset($config['ovpn']['ports'])) {
-        unset($config['ovpn']['ports']);
+    if (isset($config['ovpn_ports'])) {
+        unset($config['ovpn_ports']);
         \write_config('Purged all port forwards', false, true);
         shell_exec('/etc/rc.filter_configure_sync');
         shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
