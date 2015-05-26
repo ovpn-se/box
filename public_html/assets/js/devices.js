@@ -12,7 +12,7 @@ $(function () {
         displayMessage('info', 'Aktiverar skydd', 'OVPNbox arbetar på att skydda enheten bakom OVPN.');
 
         $.ajax({
-            type: "POST",
+            type: "DELETE",
             url:  "/api/bypass",
             data: {
                 ip: el.data('ip')
@@ -49,7 +49,7 @@ $(function () {
         displayMessage('info', 'Inaktiverar skydd', 'OVPNbox arbetar på att skydda enheten bakom OVPN.');
 
         $.ajax({
-            type: "DELETE",
+            type: "POST",
             url:  "/api/bypass",
             data: {
                 ip: el.data('ip')
