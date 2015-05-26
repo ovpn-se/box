@@ -185,6 +185,8 @@ function activatePortForwading($ip, $port, $proto)
     // Make the config variable accessible
     global $g, $config;
 
+    var_dump($config);
+
     // Check so the input is a valid IP address
     if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
         return false;
@@ -220,7 +222,8 @@ function activatePortForwading($ip, $port, $proto)
         'type' => $proto
     );
 
-
+    var_dump($config);
+    
     \write_config('Added port forward for host', false, true);
     shell_exec('/etc/rc.filter_configure_sync');
     shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
