@@ -43,6 +43,7 @@ $(function () {
 
                 info.addClass('hidden');
                 button.prop("disabled",false);
+                button.html('Öppna port');
 
             },
             error: function(xhr, textStatus, errorThrown ) {
@@ -65,7 +66,7 @@ $(function () {
     $("body").on('click', '.delete_port', function() {
 
         // Hide error message
-        var error = $(".error"), table = $('.table'), info = $(".info");
+        var error = $(".error"), table = $('.table'), info = $(".info"), el = $(this);
         error.addClass('hidden');
 
         displayMessage('info', 'Tar bort port', 'OVPNbox arbetar på att stänga porten till enheten.');
@@ -74,17 +75,16 @@ $(function () {
             type: "DELETE",
             url:  "/api/port",
             data: {
-                ip: $(this).data('ip'),
-                port: $(this).data('port'),
-                type: $(this).data('type')
+                ip: el.data('ip'),
+                port: el.data('port'),
+                type: el.data('type')
             },
             async: true,
             cache: false,
             timeout:120000,
             success: function () {
 
-                console.log($(this));
-                $(this).parent().parent().remove();
+                el.parent().parent().remove();
 
                 if($('tbody tr').length == 0) {
                     table.addClass('hidden');
