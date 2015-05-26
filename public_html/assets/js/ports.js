@@ -7,7 +7,7 @@ $(function () {
         event.preventDefault();
 
         // Hide error message
-        var error = $(".error"), device = $("#device"), port_number = $("#port_number"), type = $("#port_protocol"),  button = $("#port_form").find('button'), table = $('.table');
+        var error = $(".error"), device = $("#device"), port_number = $("#port_number"), type = $("#port_protocol"),  button = $("#port_form").find('button'), table = $('.table'), info = $(".info");
         error.addClass('hidden');
 
         displayMessage('info', 'Öppnar port', 'OVPNbox arbetar på att vidarebefordra porten till enheten.');
@@ -41,6 +41,7 @@ $(function () {
                     $(".ports-display").removeClass('hidden');
                 }
 
+                info.addClass('hidden');
                 button.prop("disabled",false);
 
             },
@@ -83,7 +84,7 @@ $(function () {
             success: function () {
 
                 $("#port-" + $(this).data('portid')).remove();
-
+                info.addClass('hidden');
             },
             error: function(xhr, textStatus, errorThrown ) {
                 try {
