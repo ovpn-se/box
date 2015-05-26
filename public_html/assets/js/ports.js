@@ -29,7 +29,7 @@ $(function () {
             timeout:120000,
             success: function () {
 
-                $('.tbody').append(
+                $('tbody').append(
                         '<tr>' +
                             '<td>' + device.find("option:selected").text() + '</td>' +
                             '<td>' + port_number.val() + '</td>' +
@@ -38,7 +38,7 @@ $(function () {
 
                 if(table.hasClass('hidden')) {
                     table.removeClass('hidden');
-                    $(".ports-display").removeClass('hidden');
+                    $(".ports-display").addClass('hidden');
                 }
 
                 info.addClass('hidden');
