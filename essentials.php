@@ -185,6 +185,8 @@ function activatePortForwading($ip, $port, $proto)
     // Make the config variable accessible
     global $g, $config;
 
+    $proto = strtolower($proto);
+
     // Check so the input is a valid IP address
     if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
         return false;
@@ -196,7 +198,7 @@ function activatePortForwading($ip, $port, $proto)
     }
 
     // Check so the input is valid: udp,tcp or both
-    if (!in_array(strtolower($proto), array('udp', 'tcp', 'both'))) {
+    if (!in_array($proto, array('udp', 'tcp', 'both'))) {
         return false;
     }
 

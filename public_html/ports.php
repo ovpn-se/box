@@ -23,12 +23,11 @@ require('./assets/template/top.php');
 
 <h4 class="text-center">Portvidarebefordran</h4>
 
-    <div class="alert alert-info <?php if($ports) { echo 'hidden'; } ?>" role="alert">Det har inte några portar som är vidarebefordrade.</div>
+    <div class="alert alert-info ports-display <?php if($ports) { echo 'hidden'; } ?>" role="alert">Inga portar är vidarebefordrade.</div>
 
     <table class="table table-striped <?php if(!$ports) { echo 'hidden'; } ?>">
         <thead>
         <tr>
-            <th>#</th>
             <th>Enhet</th>
             <th>Port</th>
             <th>Typ</th>
@@ -57,8 +56,6 @@ require('./assets/template/top.php');
                         $type = "";
                     }
 
-
-
                     if(empty($static[md5($entry['ip'])]['hostname'])) {
                         $hostname = '<i>Ej angivet</i>';
                     } else {
@@ -66,12 +63,11 @@ require('./assets/template/top.php');
                     }
 
                     echo
-                        '<tr>' .
-                        '<th scope="row">' . $x . '</th>' .
+                        '<tr id="port-' . $x . '>' .
                         '<td>' . $entry['ip'] . ' / ' . $hostname . '</td>' .
                         '<td>' . $entry['port'] . '</td>' .
                         '<td>' . $type . '</td>' .
-                        '<td><a href="javascript:void(0);" class="delete_port" data-ip="' . $entry['ip'] . '" data-port="' . $entry['port'] . '" data-type="' . $entry['type'] . '"><i class="fa fa-trash"></i></a></td>' .
+                        '<td><a href="javascript:void(0);" class="delete_port" title="Ta bort vidarebefordran" data-ip="' . $entry['ip'] . '" data-port="' . $entry['port'] . '" data-type="' . $entry['type'] . '" data-portid="' . $x . '"><i class="fa fa-trash"></i></a></td>' .
                         '</tr>';
 
                     $x++;
