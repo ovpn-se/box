@@ -40,8 +40,6 @@ require('./assets/template/top.php');
 
         if($ports) {
 
-            \Base\String::print_pre($ports, 'ports');
-            \Base\String::print_pre($static, 'static');
             foreach($ports as $host) {
 
                 foreach($host as $entry) {
@@ -63,7 +61,7 @@ require('./assets/template/top.php');
                     }
 
                     echo
-                        '<tr id="port-' . $x . '>' .
+                        '<tr id="port-' . $x . '">' .
                         '<td>' . $entry['ip'] . ' / ' . $hostname . '</td>' .
                         '<td>' . $entry['port'] . '</td>' .
                         '<td>' . $type . '</td>' .
