@@ -250,19 +250,23 @@ function activateVPNBypass($ip) {
         $config['ovpn']['ovpn_bypass'] = array();
     }
 
-
     // Check so the IP isn't currently being bypassed.
-    if (!in_array($ip, $config['ovpn']['ovpn_bypass'])) {
-
-        // The IP isn't currently being bypassed so let's add it to the configuration file.
-        $config['ovpn']['ovpn_bypass'][] = $ip;
-        \write_config('Added IP address to bypass VPN', false, true);
-        shell_exec('/etc/rc.filter_configure_sync');
-        shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
-        return true;
+    if(!empty($config['ovpn']['ovpn_bypass'])) {
+        foreach($config['ovpn']['ovpn_bypass'] as $entry) {
+            if($entry['ip'] == $ip) {
+                return false;
+            }
+        }
     }
 
-    return false;
+    // The IP isn't currently being bypassed so let's add it to the configuration file.
+    $config['ovpn']['ovpn_bypass'][] = array('ip' => $ip);
+    \write_config('Added IP address to bypass VPN', false, true);
+    shell_exec('/etc/rc.filter_configure_sync');
+    shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
+
+    return true;
+
 }
 
 /**
@@ -276,17 +280,10 @@ function deactivateVPNBypass($ip) {
     // Make the config variable accessible
     global $g, $config;
 
-    // Check so the bypass array exists in pfSenses configuration
     if (isset($config['ovpn']['ovpn_bypass']) && !empty($config['ovpn']['ovpn_bypass'])) {
-
-        // Loop through all hosts
-        foreach ($config['ovpn']['ovpn_bypass'] as $k => $v) {
-
-            // Check whether the host is the requsted IP
-            if ($v == $ip) {
-
-                // Remove host from array and update the configuration file.
-                unset($config['ovpn']['ovpn_bypass'][$k]);
+        foreach ($config['ovpn']['ovpn_bypass'] as $key => $entry) {
+            if ($entry['ip'] == $ip ) {
+                unset($config['ovpn']['ovpn_bypass'][$key]);
                 \write_config('Removed IP address to bypass VPN', false, true);
                 shell_exec('/etc/rc.filter_configure_sync');
                 shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
