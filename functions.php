@@ -120,7 +120,7 @@ function activatePortForwading($ip,$port,$proto)
     }
 
     // Check so the input is valid: udp,tcp or both
-    if (!in_array($proto, array('udp', 'tcp', 'both'))) {
+    if (!in_array(strtolower($proto), array('udp', 'tcp', 'both'))) {
         return false;
     }
 
