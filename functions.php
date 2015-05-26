@@ -265,6 +265,17 @@ function activateVPNBypass($ip) {
     shell_exec('/etc/rc.filter_configure_sync');
     shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
 
+
+    $file    = new \Shell\File();
+    $content = $file->read('config.json');
+    $OVPNconfig  = json_decode($content);
+
+    if(!$content || !$OVPNconfig) {
+        \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
+    }
+
+    shell_exec('/sbin/pfctl -F state -i ' . $OVPNconfig->interfaces->openvpn);
+
     return true;
 
 }
@@ -283,10 +294,22 @@ function deactivateVPNBypass($ip) {
     if (isset($config['ovpn']['ovpn_bypass']) && !empty($config['ovpn']['ovpn_bypass'])) {
         foreach ($config['ovpn']['ovpn_bypass'] as $key => $entry) {
             if ($entry['ip'] == $ip ) {
+
+
                 unset($config['ovpn']['ovpn_bypass'][$key]);
-                \write_config('Removed IP address to bypass VPN', false, true);
+                \write_config('Removed IP address from bypass', false, true);
                 shell_exec('/etc/rc.filter_configure_sync');
                 shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
+
+                $file    = new \Shell\File();
+                $content = $file->read('config.json');
+                $OVPNconfig  = json_decode($content);
+
+                if(!$content || !$OVPNconfig) {
+                    \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
+                }
+
+                shell_exec('/sbin/pfctl -F state -i ' . $OVPNconfig->interfaces->openvpn);
                 return true;
             }
         }
