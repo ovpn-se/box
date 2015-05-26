@@ -74,9 +74,9 @@ $(function () {
             type: "DELETE",
             url:  "/api/port",
             data: {
-                ip: device.val(),
-                port: port_number.val(),
-                type: type.val()
+                ip: $(this).data('ip'),
+                port: $(this).data('port'),
+                type: $(this).data('type')
             },
             async: true,
             cache: false,
