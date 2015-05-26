@@ -83,8 +83,14 @@ $(function () {
             timeout:120000,
             success: function () {
 
+                console.log($(this));
                 $(this).parent().parent().remove();
-                console.log('el:'+ $( 'tbody tr' ).length);
+
+                if($('tbody tr').length == 0) {
+                    table.addClass('hidden');
+                    $(".ports-display").removeClass('hidden');
+                }
+
                 info.addClass('hidden');
             },
             error: function(xhr, textStatus, errorThrown ) {

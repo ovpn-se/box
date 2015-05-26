@@ -225,8 +225,8 @@ function purgeVPNBypass()
     // Make the config variable accessible
     global $g, $config;
 
-    if (isset($config['ovpn']['bypass'])) {
-        unset($config['ovpn']['bypass']);
+    if (isset($config['ovpn']['ovpn_bypass'])) {
+        unset($config['ovpn']['ovpn_bypass']);
         \write_config('Purged all IP addresses that bypass VPN', false, true);
         shell_exec('/etc/rc.filter_configure_sync');
         shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
@@ -246,16 +246,16 @@ function activateVPNBypass($ip) {
     // Make the config variable accessible
     global $g, $config;
 
-    if (!isset($config['ovpn']['bypass'])) {
-        $config['ovpn']['bypass'] = array();
+    if (!isset($config['ovpn']['ovpn_bypass'])) {
+        $config['ovpn']['ovpn_bypass'] = array();
     }
 
 
     // Check so the IP isn't currently being bypassed.
-    if (!in_array($ip, $config['ovpn']['bypass'])) {
+    if (!in_array($ip, $config['ovpn']['ovpn_bypass'])) {
 
         // The IP isn't currently being bypassed so let's add it to the configuration file.
-        $config['ovpn']['bypass'][] = $ip;
+        $config['ovpn']['ovpn_bypass'][] = $ip;
         \write_config('Added IP address to bypass VPN', false, true);
         shell_exec('/etc/rc.filter_configure_sync');
         shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
@@ -277,16 +277,16 @@ function deactivateVPNBypass($ip) {
     global $g, $config;
 
     // Check so the bypass array exists in pfSenses configuration
-    if (isset($config['ovpn']['bypass']) && !empty($config['ovpn']['bypass'])) {
+    if (isset($config['ovpn']['ovpn_bypass']) && !empty($config['ovpn']['ovpn_bypass'])) {
 
         // Loop through all hosts
-        foreach ($config['ovpn']['bypass'] as $k => $v) {
+        foreach ($config['ovpn']['ovpn_bypass'] as $k => $v) {
 
             // Check whether the host is the requsted IP
             if ($v == $ip) {
 
                 // Remove host from array and update the configuration file.
-                unset($config['ovpn']['bypass'][$k]);
+                unset($config['ovpn']['ovpn_bypass'][$k]);
                 \write_config('Removed IP address to bypass VPN', false, true);
                 shell_exec('/etc/rc.filter_configure_sync');
                 shell_exec('/sbin/pfctl -F state -i ' . \get_real_interface("wan"));
@@ -309,8 +309,8 @@ function showVPNBypassHosts() {
     global $g, $config;
 
     // Check so the bypass array exists in pfSenses configuration
-    if (isset($config['ovpn']['bypass'])) {
-        return $config['ovpn']['bypass'];
+    if (isset($config['ovpn']['ovpn_bypass'])) {
+        return $config['ovpn']['ovpn_bypass'];
     }
 
     return false;
