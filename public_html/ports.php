@@ -40,6 +40,9 @@ require('./assets/template/top.php');
         $x = 1;
 
         if($ports) {
+
+            \Base\String::print_pre($ports, 'ports');
+            \Base\String::print_pre($static, 'static');
             foreach($ports as $entry) {
 
                 if($entry['type'] == "tcp") {
