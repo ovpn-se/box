@@ -65,7 +65,7 @@ $(function () {
     $("body").on('click', '.delete_port', function() {
 
         // Hide error message
-        var error = $(".error"), device = $("#device"), port_number = $("#port_number"), type = $("#port_protocol"),  button = $("#port_form").find('button'), table = $('.table'), info = $(".info");
+        var error = $(".error"), table = $('.table'), info = $(".info");
         error.addClass('hidden');
 
         displayMessage('info', 'Tar bort port', 'OVPNbox arbetar på att stänga porten till enheten.');
@@ -82,6 +82,9 @@ $(function () {
             cache: false,
             timeout:120000,
             success: function () {
+
+                console.log($(this).data('portid'));
+                console.log('el:'+ $( 'tbody tr' ).length);
 
                 $("#port-" + $(this).data('portid')).remove();
                 info.addClass('hidden');
