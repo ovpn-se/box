@@ -111,9 +111,9 @@ require('./assets/template/top.php');
         <label for="port_protocol" class="control-label"></label>
         <div class="col-sm-6">
             <select class="form-control" name="port_protocol" id="port_protocol">
-                <option value="TCP">TCP</option>
-                <option value="UDP">UDP</option>
-                <option value="TCP/UDP">TCP/UDP</option>
+                <option value="tcp">TCP</option>
+                <option value="udp">UDP</option>
+                <option value="both">TCP/UDP</option>
             </select>
         </div>
     </div>
