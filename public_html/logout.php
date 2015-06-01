@@ -9,20 +9,36 @@ $OVPNconfig = json_decode($content);
 // Verify that we could read the contents
 if(!$content || !$OVPNconfig) {
     \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
-    header("Location: /login/");
+    echo 'Ett tekniskt fel har inträffat';
     die();
 }
 
 // Remove credentials and session
-unset($OVPNconfig->credentials);
-unset($OVPNconfig->session);
-unset($OVPNconfig->server);
-unset($OVPNconfig->datacenter);
+if(isset($OVPNconfig->credentials)) {
+    unset($OVPNconfig->credentials);
+}
+
+if(isset($OVPNconfig->session)) {
+    unset($OVPNconfig->session);
+}
+
+if(isset($OVPNconfig->server)) {
+    unset($OVPNconfig->server);
+}
+
+if(isset($OVPNconfig->datacenter)) {
+    unset($OVPNconfig->datacenter);
+}
+
 unset($_SESSION);
 
-// Stop OpenVPN
-$openvpn    = new \OpenVPN\OpenVPN();
-$openvpn->stop();
+// Checks whether the user is connected to OVPN or not
+if(\Network\Adapter::isConnectedToOVPN()) {
+    
+    // Stop OpenVPN
+    $openvpn    = new \OpenVPN\OpenVPN();
+    $openvpn->stop();
+}
 
 // Save credentials and session data in the config file
 $write = $file->write(array('file' => 'config.json', 'content' => json_encode($OVPNconfig,JSON_PRETTY_PRINT)));
