@@ -19,25 +19,31 @@ class Update {
     public function checkLatestCommit()
     {
         // Fetch datacenters
-        $response = \Unirest\Request::get("https://api.github.com/repos/ovpn-se/box/commits");
 
-        // Verify respons
-        if($response->code != 200) {
+        try {
+            $response = \Unirest\Request::get("https://api.github.com/repos/ovpn-se/box/commits");
+
+            // Verify respons
+            if($response->code != 200) {
+                return false;
+            }
+
+            $date = new \DateTime(
+                $response->body[0]->commit->committer->date,
+                new \DateTimeZone('Europe/Stockholm')
+            );
+
+            return array(
+                'commit' => array(
+                    'full' => $response->body[0]->sha,
+                    'short' => substr($response->body[0]->sha, 0, 10),
+                ),
+                'date' => $date->getTimestamp()
+            );
+        } catch(\Exception $ex) {
             return false;
         }
 
-        $date = new \DateTime(
-            $response->body[0]->commit->committer->date,
-            new \DateTimeZone('Europe/Stockholm')
-        );
-
-        return array(
-            'commit' => array(
-                'full' => $response->body[0]->sha,
-                'short' => substr($response->body[0]->sha, 0, 10),
-            ),
-            'date' => $date->getTimestamp()
-        );
 
     }
 

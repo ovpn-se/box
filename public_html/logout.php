@@ -34,7 +34,7 @@ unset($_SESSION);
 
 // Checks whether the user is connected to OVPN or not
 if(\Network\Adapter::isConnectedToOVPN()) {
-    
+
     // Stop OpenVPN
     $openvpn    = new \OpenVPN\OpenVPN();
     $openvpn->stop();
