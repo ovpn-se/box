@@ -26,6 +26,7 @@ include ('/etc/inc/filter.inc');
 include ('/etc/inc/ovpn.inc');
 include ('/etc/inc/globals.inc');
 include ('/etc/inc/functions.inc');
+include ('/etc/inc/util.inc');
 
 // Import pfSense functionality
 include ('functions.php');

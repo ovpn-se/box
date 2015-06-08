@@ -267,12 +267,22 @@ function addStaticMapping($hostname, $mac, $ip)
 
     $a_maps[] = $mapent;
 
-    usort($config['dhcpd']['lan']['staticmap'], "staticmapcmp");
+    staticmaps_sort('lan');
 
     \write_config('Added static mapping', false, true);
     \services_dhcpd_configure();
 
     return true;
+}
+
+function staticmaps_sort($ifgui) {
+    global $g, $config;
+
+    usort($config['dhcpd'][$ifgui]['staticmap'], "staticmapcmp");
+}
+
+function staticmapcmp($a, $b) {
+    return \ipcmp($a['ipaddr'], $b['ipaddr']);
 }
 
 /**
