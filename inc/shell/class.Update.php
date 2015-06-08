@@ -120,15 +120,15 @@ class Update {
 
         // Verify that we could read the contents
         if(!$content || !$OVPNconfig) {
-            \Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
+            //\Base\Log::message(_('Misslyckades att läsa config.json eller så var filen i ett felaktigt format'));
             return false;
         }
 
         // Execute update script
         $update = shell_exec('/opt/ovpn/sbin/update-from-master');
         $this->postUpdate();
-        \Base\Log::message('Update of OVPN was executed. Current version: \'' . $release . '\'', 'info');
-        \Base\Log::message('Output of update script:  ' . $update, 'info');
+        //\Base\Log::message('Update of OVPN was executed. Current version: \'' . $release . '\'', 'info');
+        //\Base\Log::message('Output of update script:  ' . $update, 'info');
 
         // Set current version
         $OVPNconfig->gui = $release;
@@ -138,7 +138,7 @@ class Update {
 
         // Verify that the file write was successful
         if(!$write) {
-            \Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
+            //\Base\Log::message(_('Misslyckades att skriva ändringar till config.json.'));
             return false;
         }
 
