@@ -80,7 +80,7 @@ $(function () {
     body.on('click', '.edit_device', function() {
 
         // Hide error message
-        var error = $(".error"), info = $(".info"), el = $(this), parent = el.data('rowid'), staticip = $(".staticips");
+        var error = $(".error"), info = $(".info"), el = $(this), parent = el.data('rowid'), staticip = $(".staticips"), tbody = staticip.find("tbody");
         error.addClass('hidden');
 
         displayMessage('info', 'Ändrar IP', 'OVPNbox arbetar på att allokera en statisk IP-adress till enheten.');
@@ -100,12 +100,17 @@ $(function () {
                 $("#" + el.data('rowid')).remove();
 
                 staticip.removeClass('hidden');
+
                 staticip.find('tbody').append(
                     '<tr>' +
-                        '<td>' + device.find("option:selected").text() + '</td>' +
-                        '<td>' + port_number.val() + '</td>' +
-                        '<td>' + type.find("option:selected").text() + '</td>' +
-                        '<td><a href="javascript:void(0);" title="Porten har vidarebefordrats!"><i class="fa fa-check"></i></a></td></tr>');
+                        '<th scope="row">' + (tbody.children().length+1) + '</td>' +
+                        '<td>' + el.data('hostname') + '</td>' +
+                        '<td>' + output.ip + '</td>' +
+                        '<td>' + el.data('mac') + '</td>' +
+                        '<td>' + el.data('online') + '</td>' +
+                        '<td><a href="javascript:void(0);" class="activate_bypass" title="Klicka för att pausa enhetens skydd" data-ip="' + output.ip + '"><i class="fa fa-pause"></i></a></td>' +
+                    '</tr>'
+                );
 
                 info.addClass('hidden');
             },

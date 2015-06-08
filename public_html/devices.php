@@ -119,7 +119,7 @@ require('./assets/template/top.php');
                         '<td>' . $entry['ip'] . '</td>' .
                         '<td>' . $entry['mac'] . '</td>' .
                         '<td>' . $online . '</td>' .
-                        '<td><a href="javascript:void(0);" class="edit_device" title="Klicka för att ge enheten en statisk IP-adress" data-hostname="' . $hostname . '" data-mac="' . $entry['mac'] . '" data-rowid="' . $x . '"><i class="fa fa-pencil-square-o"></i></a></td>' .
+                        '<td><a href="javascript:void(0);" class="edit_device" title="Klicka för att ge enheten en statisk IP-adress" data-online="' . $online . '" data-hostname="' . $hostname . '" data-mac="' . $entry['mac'] . '" data-rowid="' . $x . '"><i class="fa fa-plus"></i></a></td>' .
                     '</tr>';
 
                 $x++;
