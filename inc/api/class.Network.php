@@ -170,15 +170,13 @@ class Network {
             foreach($static as $entry) {
                 $entries[$entry['ip']] = $entry['mac'];
             }
-            var_dump($entries);
 
             // Check so the MAC-address isn't already used
             if(in_array($mac, $entries)) {
                 $app->halt(500, json_encode(array('status' => false, 'error' => 'Enheten har redan en statisk IP-adress.')));
             }
 
-            do {
-
+            while(true) {
                 $ip = "10.220.0." . $testIp;
 
                 if(!isset($entries[$ip])) {
@@ -187,7 +185,7 @@ class Network {
 
                 $testIp++;
 
-            } while (0);
+            }
 
         } else {
             $ip = "10.220.0." . $testIp;
@@ -197,9 +195,8 @@ class Network {
             $hostname = "Ej angivet";
         }
 
-        echo $ip;
-
         // Execute function to add mapping
+        $hostname = preg_replace('~[^a-zA-Z0-9]+~', '', $hostname);
         $create = \addStaticMapping($hostname, $mac, $ip);
 
         if(!$create) {
@@ -208,7 +205,7 @@ class Network {
 
         // Return success
         $app->response->status(200);
-        $app->response->body(json_encode(array('status' => true)));
+        $app->response->body(json_encode(array('status' => true, 'ip' => $ip)));
         $app->stop();
     }
 } 

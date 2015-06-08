@@ -8,7 +8,8 @@ if(\Base\User::getCredentials()) {
 }
 
 $data = array(
-    'page' => 'login'
+    'page' => 'login',
+    'title' => 'Logga in'
 );
 
 require('./assets/template/top.php');

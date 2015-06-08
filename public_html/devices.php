@@ -18,7 +18,8 @@ $bypass = \Network\BypassVPN::get();
 
 
 $data = array(
-    'page' => 'devices'
+    'page' => 'devices',
+    'title' => 'Enheter'
 );
 require('./assets/template/top.php');
 ?>

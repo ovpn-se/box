@@ -16,7 +16,8 @@ $static = \Network\IP::getStaticAddresses();
 
 
 $data = array(
-    'page' => 'ports'
+    'page' => 'ports',
+    'title' => 'Portar'
 );
 require('./assets/template/top.php');
 ?>

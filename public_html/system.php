@@ -59,7 +59,8 @@ if($addons) {
 $version = \Shell\System::getBoxVersion();
 
 $data = array(
-    'page' => 'system'
+    'page' => 'system',
+    'title' => 'System'
 );
 require('./assets/template/top.php');
 ?>

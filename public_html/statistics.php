@@ -8,7 +8,8 @@ if(!\Base\User::getCredentials()) {
 }
 
 $data = array(
-    'page' => 'stats'
+    'page' => 'stats',
+    'title' => 'Statistik'
 );
 require('./assets/template/top.php');
 ?>

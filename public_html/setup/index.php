@@ -2,7 +2,8 @@
 require('../../essentials.php');
 
 $data = array(
-    'page' => 'setup'
+    'page' => 'setup',
+    'title' => 'Inställningar'
 );
 
 $adapter   = new Network\Adapter();

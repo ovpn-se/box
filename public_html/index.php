@@ -38,7 +38,8 @@ $addons = \Base\User::getAddons();
 $connected = \Network\Adapter::isConnectedToOVPN();
 
 $data = array(
-    'page' => 'index'
+    'page' => 'index',
+    'title' => 'Anslutning'
 );
 require('./assets/template/top.php');
 ?>
