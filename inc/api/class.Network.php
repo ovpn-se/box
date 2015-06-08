@@ -170,6 +170,7 @@ class Network {
             foreach($static as $entry) {
                 $entries[$entry['ip']] = $entry['mac'];
             }
+            var_dump($entries);
 
             // Check so the MAC-address isn't already used
             if(in_array($mac, $entries)) {
@@ -195,6 +196,8 @@ class Network {
         if($hostname == "<i>Ej angivet</i>") {
             $hostname = "Ej angivet";
         }
+
+        echo $ip;
 
         // Execute function to add mapping
         $create = \addStaticMapping($hostname, $mac, $ip);
