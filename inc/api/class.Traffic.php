@@ -43,7 +43,7 @@ class Traffic {
         }
 
         $trafficData = new \SimpleXMLElement($response->raw_body);
-        $count = count($trafficData->seconds->e)-1;
+        $count = count($trafficData->seconds->e)-2;
 
         // Return success
         $app->response->status(200);
