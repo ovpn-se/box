@@ -142,6 +142,7 @@ class File {
         // Create file
         $fp = fopen($filename,"w");
         fclose($fp);
+        chmod($filename, '0777');
 
         // Make the filesystem read-only
         \Shell\System::setReadOnly();

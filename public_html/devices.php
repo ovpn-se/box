@@ -108,11 +108,9 @@ require('./assets/template/top.php');
                     $online = '-';
                 }
 
-                // Verify that the IP isn't static as well
+                // Verify that the device isn't static as well
                 if($static) {
-                    if(isset($static[md5($entry['ip'])])) {
-                        continue;
-                    }
+                    // @todo check mac
                 }
 
                 if(!isset($entry['hostname'])) {
