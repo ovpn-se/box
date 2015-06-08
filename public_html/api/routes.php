@@ -21,3 +21,5 @@ $app->delete('/port', 'API\Network:deletePortforward');
 
 $app->post('/bypass', 'API\Network:createBypass');
 $app->delete('/bypass', 'API\Network:deleteBypass');
+
+$app->post('/static', 'API\Network:createStaticMapping');

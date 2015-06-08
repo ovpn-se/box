@@ -142,4 +142,70 @@ class Network {
         $app->response->body(json_encode(array('status' => true)));
         $app->stop();
     }
+
+    public function createStaticMapping()
+    {
+
+        $app = Slim::getInstance();
+
+        // Fetch variables
+        $hostname   = $app->request->post('hostname');
+        $mac        = $app->request->post('mac');
+
+        // Verify that required variables exist
+        if(is_null($hostname) || is_null($mac)) {
+            \Base\Log::message(_('Nödvändiga parametrar skickades inte med i API-anropet (ip, port, type)'));
+            $app->halt(400, json_encode(array('status' => false, 'error' => _('Nödvändiga parametrar saknas.'))));
+        }
+
+        // Fetch current static IP-addresses
+        $static = \Network\IP::getStaticAddresses();
+        $testIp = 2;
+
+        if($static) {
+
+            $entries = array();
+
+            // Loop through all entries
+            foreach($static as $entry) {
+                $entries[$entry['ip']] = $entry['mac'];
+            }
+
+            // Check so the MAC-address isn't already used
+            if(in_array($mac, $entries)) {
+                $app->halt(500, json_encode(array('status' => false, 'error' => 'Enheten har redan en statisk IP-adress.')));
+            }
+
+            do {
+
+                $ip = "10.220.0." . $testIp;
+
+                if(!isset($entries[$ip])) {
+                    break;
+                }
+
+                $testIp++;
+
+            } while (0);
+
+        } else {
+            $ip = "10.220.0." . $testIp;
+        }
+
+        if($hostname == "<i>Ej angivet</i>") {
+            $hostname = "Ej angivet";
+        }
+
+        // Execute function to add mapping
+        $create = \addStaticMapping($hostname, $mac, $ip);
+
+        if(!$create) {
+            $app->halt(500, json_encode(array('status' => false, 'error' => 'Misslyckades att ge enheten en statisk IP-adress.')));
+        }
+
+        // Return success
+        $app->response->status(200);
+        $app->response->body(json_encode(array('status' => true)));
+        $app->stop();
+    }
 } 

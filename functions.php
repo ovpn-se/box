@@ -235,6 +235,46 @@ function purgeVPNBypass()
     return true;
 }
 
+function addStaticMapping($hostname, $mac, $ip)
+{
+
+    // Make the config variable accessible
+    global $g, $config;
+
+    $a_maps = &$config['dhcpd']['lan']['staticmap'];
+
+    $mapent = array();
+    $mapent['mac'] = $mac;
+    $mapent['cid'] = '';
+    $mapent['ipaddr'] = $ip;
+    $mapent['hostname'] = $hostname;
+    $mapent['descr'] = '';
+    $mapent['arp_table_static_entry'] = false;
+    $mapent['filename'] = '';
+    $mapent['rootpath'] = '';
+    $mapent['defaultleasetime'] = '';
+    $mapent['maxleasetime'] = '';
+    $mapent['gateway'] = '';
+    $mapent['domain'] = '';
+    $mapent['domainsearchlist'] = '';
+    $mapent['ddnsdomain'] = '';
+    $mapent['ddnsdomainprimary'] = '';
+    $mapent['ddnsdomainkeyname'] = '';
+    $mapent['ddnsdomainkey'] = '';
+    $mapent['ddnsupdate'] = false;
+    $mapent['tftp'] = '';
+    $mapent['ldap'] = '';
+
+    $a_maps[] = $mapent;
+
+    usort($config['dhcpd']['lan']['staticmap'], "staticmapcmp");
+
+    \write_config('Added static mapping', false, true);
+    \services_dhcpd_configure();
+
+    return true;
+}
+
 /**
  * Activates bypass for a specific IP
  *

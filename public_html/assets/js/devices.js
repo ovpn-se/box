@@ -76,4 +76,50 @@ $(function () {
         });
     });
 
+    // Executed when user wants to add a static mapping
+    body.on('click', '.edit_device', function() {
+
+        // Hide error message
+        var error = $(".error"), info = $(".info"), el = $(this), parent = el.data('rowid'), staticip = $(".staticips");
+        error.addClass('hidden');
+
+        displayMessage('info', 'Ändrar IP', 'OVPNbox arbetar på att allokera en statisk IP-adress till enheten.');
+
+        $.ajax({
+            type: "POST",
+            url:  "/api/static",
+            data: {
+                hostname: el.data('hostname'),
+                mac: el.data('mac')
+            },
+            async: true,
+            cache: false,
+            timeout:120000,
+            success: function (output) {
+
+                $("#" + el.data('rowid')).remove();
+
+                staticip.removeClass('hidden');
+                staticip.find('tbody').append(
+                    '<tr>' +
+                        '<td>' + device.find("option:selected").text() + '</td>' +
+                        '<td>' + port_number.val() + '</td>' +
+                        '<td>' + type.find("option:selected").text() + '</td>' +
+                        '<td><a href="javascript:void(0);" title="Porten har vidarebefordrats!"><i class="fa fa-check"></i></a></td></tr>');
+
+                info.addClass('hidden');
+            },
+            error: function(xhr, textStatus, errorThrown ) {
+                try {
+                    var err = JSON.parse(xhr.responseText);
+                } catch(error) {
+                    var err = [{"error": "Ett tekniskt fel har skett."}];
+                }
+
+                displayMessage('error', 'Fel', err.error);
+            }
+        });
+
+    });
+
 });

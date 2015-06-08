@@ -21,6 +21,7 @@ define('DOCUMENT_ROOT', dirname(__FILE__));
 include ('/etc/inc/config.inc');
 include ('/etc/inc/interfaces.inc');
 include ('/etc/inc/shaper.inc');
+include ('/etc/inc/services.inc');
 include ('/etc/inc/filter.inc');
 include ('/etc/inc/ovpn.inc');
 include ('/etc/inc/globals.inc');
