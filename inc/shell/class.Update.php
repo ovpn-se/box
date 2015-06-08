@@ -70,15 +70,16 @@ class Update {
 
         // Verify that we could read the contents
         if(!$content || !$OVPNconfig) {
-            \Base\Log::message('Misslyckades att läsa config.json eller så var filen i ett felaktigt format');
+            //\Base\Log::message('Misslyckades att läsa config.json eller så var filen i ett felaktigt format');
             return false;
         }
 
         // Look at the current commit to see if we should update
         if(!isset($OVPNconfig->gui)) {
-            \Base\Log::message('GUI-parametern fanns inte i config-filen', 'info');
+            //\Base\Log::message('GUI-parametern fanns inte i config-filen', 'info');
             $update = true;
         } else {
+
 
             if($OVPNconfig->gui->commit->full != $release['commit']['full']) {
                 $update = true;
