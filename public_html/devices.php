@@ -100,35 +100,38 @@ require('./assets/template/top.php');
         <tbody>
             <?php
             $x = 1;
-            foreach($dhcp as $entry) {
 
-                if($entry['online'] == 'online') {
-                    $online = 'Ansluten';
-                } else {
-                    $online = '-';
-                }
+            if($dhcp) {
+                foreach($dhcp as $entry) {
 
-                // Verify that the device isn't static as well
-                if($static) {
-                    // @todo check mac
-                }
+                    if($entry['online'] == 'online') {
+                        $online = 'Ansluten';
+                    } else {
+                        $online = '-';
+                    }
 
-                if(!isset($entry['hostname'])) {
-                    $hostname = '<i>Ej angivet</i>';
-                } else {
-                    $hostname = $entry['hostname'];
-                }
-                echo
-                    '<tr id="' . $x . '">' .
+                    // Verify that the device isn't static as well
+                    if($static) {
+                        // @todo check mac
+                    }
+
+                    if(!isset($entry['hostname'])) {
+                        $hostname = '<i>Ej angivet</i>';
+                    } else {
+                        $hostname = $entry['hostname'];
+                    }
+                    echo
+                        '<tr id="' . $x . '">' .
                         '<th scope="row">' . $x . '</th>' .
                         '<td>' . $hostname . '</td>' .
                         '<td>' . $entry['ip'] . '</td>' .
                         '<td>' . $entry['mac'] . '</td>' .
                         '<td>' . $online . '</td>' .
                         '<td><a href="javascript:void(0);" class="edit_device" title="Klicka för att ge enheten en statisk IP-adress" data-online="' . $online . '" data-hostname="' . $hostname . '" data-mac="' . $entry['mac'] . '" data-rowid="' . $x . '"><i class="fa fa-plus"></i></a></td>' .
-                    '</tr>';
+                        '</tr>';
 
-                $x++;
+                    $x++;
+                }
             }
             ?>
         </tbody>
